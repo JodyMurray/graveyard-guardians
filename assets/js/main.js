@@ -82,6 +82,7 @@ scene("home", () => {
   });
 });
 
+
 // How to play button (similar to Start button)
 // ...
 scene("instructions", () => {
@@ -116,8 +117,9 @@ scene("instructions", () => {
       pos(width() / 2, height() / 4 + 40 * (index + 2)),
       origin("center"),
       layer("ui"),
-    ]);
+    
   });
+
 
   // Back button
   const backButton = add([
@@ -149,6 +151,38 @@ mouseClick(() => {
   if (startButton.isHovered()) {
     startButton.clickAction();
   }
+
+    // How to play button (similar to Start button)
+    const howToPlayButton = add([
+        pos(width() / 2, height() / 1.5),
+        origin("center"),
+        layer("ui"),
+        {
+            value: "How to play",
+        },
+        {
+            clickAction: () => {
+                go("how to play"); // Switch to the how to play scene when how to play button is clicked
+                
+            },
+        },
+        text("How To Play", {
+            size: 50,
+            origin: "center",
+        }),
+        color(255, 230, 0),
+    
+    ]);
+
+    // Handle mouse clicks on the buttons
+    mouseClick(() => {
+        if (startButton.isHovered()) {
+            startButton.clickAction();
+        } else if (howToPlayButton.isHovered()) {
+            howToPlayButton.clickAction();
+        }
+    });
+
 });
 
 // Define the game scene
