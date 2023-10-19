@@ -1,0 +1,15 @@
+body {
+    font-family: 'Oswald', sans-serif;
+    background: url("../images/background.jpg") no-repeat fixed center;
+    background-size: 100%;
+    background-color: black;
+}
+
+#game-canvas {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+  }
+
+  
