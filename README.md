@@ -21,7 +21,7 @@ The purpose of the game is to provide players with a fun and entertaining experi
 
     | User story id | As a/an | I want to be able to | So I |
     |---------------|---------|----------------------|----------|
-    | 1 | User | See the overall theme of the game from the welcome page |
+    | 1 | User | See the overall theme of the game from the welcome page | Know what to expect |
     | 2 | User | Easily access the instructions | Learn how to play |
     | 3 | User | Toggle music / sound | Create my own comfort |
     | 4 | User | See game details | Know my score, life / lives |
