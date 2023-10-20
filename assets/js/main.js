@@ -87,3 +87,4 @@ loadSprite("background-home", "/public/background-images/home_page.png", {
 });
 
 go("home");
+
