@@ -190,6 +190,7 @@ scene("game", () => {
     pos(width() / 2, height() / 2),
     origin("center"),
     scale(0.1),
+    area(),
   ]);
 
   let isWalking = false;
@@ -216,6 +217,94 @@ scene("game", () => {
   keyPress("escape", () => {
     go("home");
   });
+
+  // Handle player movement
+  keyDown("right", () => {
+    player.move(120, 0);
+  });
+
+  keyDown("left", () => {
+    player.move(-120, 0);
+  });
+
+  keyDown("up", () => {
+    player.move(0, -120);
+  });
+
+  keyDown("down", () => {
+    player.move(0, 120);
+  });
+
+  loadSprite("zombie_male", "public/sprites/zombie_male/Walk1.png");
+  loadSprite("zombie_female", "public/sprites/zombie_female/Walk1.png");
+
+  // Define the moveEnemy function
+  function moveEnemy(enemy) {
+    const movementDirection = player.pos.sub(enemy.pos).unit();
+    enemy.move(movementDirection.scale(2000 * dt()));
+    // Flip the enemy sprite based on player's position
+    if (player.pos.x > enemy.pos.x) {
+      // Player is on the right-hand side of the enemy
+      enemy.flipX(false);
+    } else {
+      // Player is on the left-hand side of the enemy
+      enemy.flipX(true);
+    }
+  }
+
+  const spawnRandomEnemy = (x, y) => {
+    const randomSpawnPoint = spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
+    const randomEnemySprite = enemySprites[Math.floor(Math.random() * enemySprites.length)];
+
+    const enemy = add([
+      sprite(randomEnemySprite),
+      pos(x, y),
+      origin("center"),
+      scale(0.1),
+      "enemy",
+    ]);
+
+    // Handle enemy movement towards the player
+    enemy.action(() => {
+      moveEnemy(enemy);
+    });
+
+    // Handle collisions with player
+    //enemy.onCollide("player", () => {
+    // Handle collision logic, e.g., player loses life, enemy is destroyed, etc.
+    // ...
+    //  enemy.destroy();
+    //});
+
+    return enemy;
+  };
+
+  // Update function to spawn random enemies at random positions
+  const spawnPoints = [
+    { x: 430, y: 730 },
+    { x: 930, y: 260 },
+    { x: 430, y: 0 },
+    { x: 0, y: 260 },
+    { x: 630, y: 730 },
+    { x: 230, y: 730 },
+    { x: 930, y: 60 },
+    { x: 930, y: 260 },
+    { x: 930, y: 460 },
+    { x: 230, y: 0 },
+    { x: 430, y: 0 },
+    { x: 630, y: 0 },
+    { x: 0, y: 60 },
+    { x: 0, y: 260 },
+    { x: 0, y: 460 },
+  ];
+
+  const enemySprites = ["zombie_male", "zombie_female"];
+
+  const spawnInterval = setInterval(() => {
+    const randomSpawnPoint = spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
+    spawnRandomEnemy(randomSpawnPoint.x, randomSpawnPoint.y);
+  }, 3000); // Spawn a new enemy every 3 seconds (adjust the interval as needed)
+
 });
 
 // Load assets and start the home page scene
