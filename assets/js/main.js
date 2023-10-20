@@ -39,7 +39,6 @@ scene("home", () => {
       size: 30,
       origin: "center",
     }),
-
   ]);
 
   const instructionsButton = add([
@@ -107,7 +106,6 @@ scene("home", () => {
       instructionsButton.clickAction();
     }
   });
-
 });
 
 // How to play button (similar to Start button)
@@ -180,16 +178,22 @@ scene("instructions", () => {
 scene("game", () => {
   add([sprite("background_cemetery"), layer("bg"), scale(0.53)]);
 
-  loadSprite("walk1", "public/sprites/jack-o-lantern/walk1.png", {
-    sliceX: 4,
-    sliceY: 1,
-    animSpeed: 0.15,
-  });
+  const floor = add([
+    rect(width(), 10),
+    pos(0, (4 * height()) / 5),
+    color(rgb(18,33,35)),
+    area(),
+    solid(),
+    "ground",
+  ]);
+
   const player = add([
     sprite("idle1"),
     pos(width() / 2, height() / 2),
     origin("center"),
     scale(0.1),
+    area(),
+    body({ isStatic: true }),
   ]);
 
   let isWalking = false;
@@ -227,6 +231,12 @@ loadSprite("background-home", "/public/background-images/home_page.png", {
 loadSprite("window", "/public/background-images/window.jpg", {
   sliceX: 1,
   sliceY: 1,
+});
+
+loadSprite("walk1", "public/sprites/jack-o-lantern/walk1.png", {
+  sliceX: 4,
+  sliceY: 1,
+  animSpeed: 0.15,
 });
 
 loadSprite("idle1", "public/sprites/jack-o-lantern/Idle1.png");
