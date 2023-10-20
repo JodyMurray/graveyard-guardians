@@ -6,6 +6,8 @@
 * [Purpose](#purpose)
 * [User Experience (UX)](#user-experience-ux)
     * [User Stories](#user-stories)
+* [Technologies](#technologies)
+
 
 
 ***
@@ -24,3 +26,10 @@ The purpose of the game is to provide players with a fun and entertaining experi
     | 3 | User | Toggle music / sound | Create my own comfort |
     | 4 | User | See game details | Know my score, life / lives |
     | 5 | User | Feel progression in difficulty | Stay focused |
+
+## Technologies
+
+* HTML
+* CSS
+* Javascript
+* Kaboom.js
