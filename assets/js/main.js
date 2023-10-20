@@ -5,6 +5,8 @@ kaboom({
   canvas: document.getElementById("game-canvas"),
 });
 
+let spawnInterval;
+
 // Define the home page scene
 scene("home", () => {
   // Display background image
@@ -106,6 +108,9 @@ scene("home", () => {
       instructionsButton.clickAction();
     }
   });
+
+  // Clear the spawn interval when switching to another scene
+  clearInterval(spawnInterval);
 });
 
 // How to play button (similar to Start button)
@@ -196,8 +201,31 @@ scene("game", () => {
     body({ isStatic: true }),
     {
       dir: vec2(1, 0),
+      health: 6, // Set player health to 6 hits
     },
   ]);
+
+  const healthBar = add([
+    rect(200, 20), // Width: 200, Height: 20
+    pos(50, 50),   // Position of the health bar on the screen
+    layer("ui"),    // UI layer
+    {
+      value: player.health, // Initial player health
+    },
+    color(255, 255, 0),
+  ]);
+
+  // Function to update the health bar based on player's health
+  function updateHealthBar() {
+    // Calculate the percentage of remaining health
+    const percentage = player.health / 6; // Assuming maximum health is 6
+
+    // Update health bar width based on player's health
+    healthBar.width = player.health * 33.3;
+
+    // Set health bar color based on remaining health
+    healthBar.color = rgb(255 * (1 - percentage), 255 * percentage, 0);
+  }
 
   let isWalking = false;
   keyDown("right", () => {
@@ -215,7 +243,7 @@ scene("game", () => {
   });
 
   keyDown("up", () => {
-    player.move(0, -120);
+    player.move(0, -220);
   });
 
   keyDown("down", () => {
@@ -234,15 +262,47 @@ scene("game", () => {
   // Define a variable to keep track of the number of spawned enemies
   let numSpawnedEnemies = 0;
 
+  const enemyHealth = 3; // Set the initial health of enemies
+
   // Handle space bar key press to fire bullets
   keyPress("space", () => {
     const bullet = createBullet(player);
   });
 
+  let canAttack = true; // Variable to control attack rate
+
   // Define the moveEnemy function
   function moveEnemy(enemy) {
+
+    const distanceToPlayer = player.pos.sub(enemy.pos).len(); // Calculate distance to player
+
+    // If the enemy is close to the player, perform attack
+    if (distanceToPlayer < 50) { // Adjust the threshold as needed
+      performAttack(enemy);
+    }
+
+    // Randomly decide whether the enemy should jump
+    if (!enemy.jumping && Math.random() < 0.02) { // Adjust the probability of jumping as needed
+      enemy.jumpForce = -10000; // Set a negative jump force to move upwards (higher jump)
+      enemy.gravity = 8000; // Set a positive gravity to bring the enemy down quickly
+      enemy.jumping = true; // Set a flag to indicate that the enemy is jumping
+    }
+
+    // Apply gravity to simulate jumping and falling
+    if (enemy.jumping) {
+      // Apply jump force to move upwards
+      enemy.move(0, enemy.jumpForce * dt());
+      enemy.jumpForce += enemy.gravity * dt(); // Apply gravity to reduce jump force over time
+
+      // Check if the enemy has landed on the ground
+      if (enemy.pos.y >= 440) {
+        enemy.pos.y = 440; // Snap the enemy to the ground
+        enemy.jumping = false; // Reset the jumping flag
+        enemy.jumpForce = 0; // Reset jump force
+      }
+    }
     const movementDirection = player.pos.sub(enemy.pos).unit();
-    enemy.move(movementDirection.scale(2000 * dt()));
+    enemy.move(movementDirection.scale(5000 * dt()));
     // Flip the enemy sprite based on player's position
     if (player.pos.x > enemy.pos.x) {
       // Player is on the right-hand side of the enemy
@@ -251,6 +311,29 @@ scene("game", () => {
       // Player is on the left-hand side of the enemy
       enemy.flipX(true);
     }
+
+    function performAttack(enemy) {
+      if (canAttack) { // Check if the enemy can attack (based on timer)
+        canAttack = false; // Set canAttack to false to prevent rapid attacks
+        setTimeout(() => {
+          canAttack = true; // Allow the enemy to attack again after the delay
+        }, 1000); // Set the delay in milliseconds (adjust as needed)
+
+        // decrease player's health by 1 when attacked by an enemy.
+        player.health--;
+        healthBar.color = rgb(255, 0, 0);
+
+        // Update health bar
+        updateHealthBar();
+
+        // Check if the player is out of health
+        if (player.health <= 0) {
+          // Perform game over logic here, e.g., switch to game over scene
+          go("home");
+        }
+      }
+    }
+
   }
 
   const spawnRandomEnemy = (x, y) => {
@@ -258,7 +341,7 @@ scene("game", () => {
     const randomEnemySprite = enemySprites[Math.floor(Math.random() * enemySprites.length)];
 
     // Check if the maximum number of enemies has been reached
-    if (numSpawnedEnemies >= 20) {
+    if (numSpawnedEnemies >= 40) {
       // Stop spawning new enemies
       return;
     }
@@ -281,12 +364,20 @@ scene("game", () => {
       moveEnemy(enemy);
     });
 
-    // Handle collisions with player
-    //enemy.onCollide("player", () => {
-    // Handle collision logic, e.g., player loses life, enemy is destroyed, etc.
-    // ...
-    //  enemy.destroy();
-    //});
+    function performAttack(enemy) {
+      // Implement your attack logic here.
+      // For example, decrease player's health by 1 when attacked by an enemy.
+      player.health--;
+
+      // Update health bar
+      updateHealthBar();
+
+      // Check if the player is out of health
+      if (player.health <= 0) {
+        // Perform game over logic here, e.g., switch to game over scene
+        go("home");
+      }
+    }
 
     return enemy;
   };
@@ -299,10 +390,10 @@ scene("game", () => {
 
   const enemySprites = ["zombie_male", "zombie_female"];
 
-  const spawnInterval = setInterval(() => {
+  spawnInterval = setInterval(() => {
     const randomSpawnPoint = spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
     spawnRandomEnemy(randomSpawnPoint.x, randomSpawnPoint.y);
-  }, 3000); // Spawn a new enemy every 3 seconds (adjust the interval as needed)
+  }, 2000); // Spawn a new enemy every 2 seconds (adjust the interval as needed)
 
   function createBullet(player) {
     const bulletSpeed = 10000;
@@ -338,14 +429,24 @@ scene("game", () => {
 
     // Handle collisions with enemies
     bullet.collides("enemy", (enemy) => {
-      // Handle bullet-enemy collision logic here
-      // For example, destroy the enemy and the bullet
-      enemy.destroy();
-      bullet.destroy();
+      // Decrease enemy health
+      enemy.health = enemy.health || enemyHealth;
+      enemy.health--; // Decrease enemy health by 1 each time they are hit
+
+      // Check if the enemy has no health left
+      if (enemy.health <= 0) {
+        // If the enemy is out of health, destroy it
+        enemy.destroy();
+      }
+
+      bullet.destroy(); // Destroy the bullet after hitting an enemy
     });
 
     return bullet;
   }
+
+  // Update health bar to reflect player's health
+  updateHealthBar();
 
 });
 
