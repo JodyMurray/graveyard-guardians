@@ -22,10 +22,11 @@ scene("home", () => {
 
   // Start button
   const startButton = add([
-    rect(120, 40),
     pos(width() / 2, height() / 2),
     origin("center"),
     layer("ui"),
+    area(),
+    color(255, 230, 0),
     {
       value: "Start",
     },
@@ -35,17 +36,18 @@ scene("home", () => {
       },
     },
     text("Start", {
-      size: 24,
-      color: rgb(0, 0, 0), // Set text color to black
+      size: 30,
       origin: "center",
     }),
+
   ]);
 
   const instructionsButton = add([
-    rect(180, 40),
     pos(width() / 2, height() / 2 + 60),
     origin("center"),
     layer("ui"),
+    area(),
+    color(255, 230, 0),
     {
       value: "Instructions",
     },
@@ -55,11 +57,36 @@ scene("home", () => {
       },
     },
     text("Instructions", {
-      size: 24,
-      color: rgb(0, 0, 0),
+      size: 30,
       origin: "center",
     }),
   ]);
+
+  // Function to generate a random shade of red
+  function randomRed() {
+    return rgb(rand(150, 255), rand(0, 50), rand(0, 50));
+  }
+
+  // Register onUpdate events for the buttons to handle bloody hover effects
+  startButton.onUpdate(() => {
+    if (startButton.isHovering()) {
+      startButton.color = randomRed(); // Change to a random shade of red when hovered
+      startButton.scale = vec2(1.2);
+    } else {
+      startButton.scale = vec2(1);
+      startButton.color = rgb(255, 0, 0); // Default red color for the button
+    }
+  });
+
+  instructionsButton.onUpdate(() => {
+    if (instructionsButton.isHovering()) {
+      instructionsButton.color = randomRed(); // Change to a random shade of red when hovered
+      instructionsButton.scale = vec2(1.2);
+    } else {
+      instructionsButton.scale = vec2(1);
+      instructionsButton.color = rgb(255, 0, 0); // Default red color for the button
+    }
+  });
 
   // Handle mouse clicks on the buttons
   mouseClick(() => {
@@ -80,6 +107,7 @@ scene("home", () => {
       instructionsButton.clickAction();
     }
   });
+
 });
 
 // How to play button (similar to Start button)
@@ -146,42 +174,6 @@ scene("instructions", () => {
       go("home"); // Switch to the home scene when the Back button is clicked
     }),
   ]);
-});
-
-// Handle mouse clicks on the buttons
-mouseClick(() => {
-  if (startButton.isHovered()) {
-    startButton.clickAction();
-  }
-
-  // How to play button (similar to Start button)
-  const howToPlayButton = add([
-    pos(width() / 2, height() / 1.5),
-    origin("center"),
-    layer("ui"),
-    {
-      value: "How to play",
-    },
-    {
-      clickAction: () => {
-        go("how to play"); // Switch to the how to play scene when how to play button is clicked
-      },
-    },
-    text("How To Play", {
-      size: 50,
-      origin: "center",
-    }),
-    color(255, 230, 0),
-  ]);
-
-  // Handle mouse clicks on the buttons
-  mouseClick(() => {
-    if (startButton.isHovered()) {
-      startButton.clickAction();
-    } else if (howToPlayButton.isHovered()) {
-      howToPlayButton.clickAction();
-    }
-  });
 });
 
 // Define the game scene
