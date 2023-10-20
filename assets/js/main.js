@@ -94,6 +94,11 @@ scene("instructions", () => {
     layer("ui"),
     color(rgb(255, 255, 255)),
   ]);
+  const overlay = add([
+    rect(width(), height()),
+    color(0, 0, 0), // Set the color to black
+    opacity(0.5),
+  ]);
 
   const instructionText = [
     "Welcome to Graveyard Guardians!",
@@ -181,7 +186,36 @@ mouseClick(() => {
 
 // Define the game scene
 scene("game", () => {
-  // Your game logic goes here
+  const player = add([
+    sprite("idle1"),
+    pos(width() / 2, height() / 2),
+    origin("center"),
+    scale(0.1),
+  ]);
+
+  // Handle player movement
+  keyDown("left", () => {
+    player.move(-120, 0);
+    player.flipX(true);
+  });
+
+  keyDown("right", () => {
+    player.move(120, 0);
+    player.flipX(false);
+    
+  });
+
+  keyDown("up", () => {
+    player.move(0, -120);
+  });
+
+  keyDown("down", () => {
+    player.move(0, 120);
+  });
+
+  keyPress("escape", () => {
+    go("home");
+  });
 });
 
 // Load assets and start the home page scene
@@ -194,5 +228,7 @@ loadSprite("window", "/public/background-images/window.jpg", {
   sliceX: 1,
   sliceY: 1,
 });
+
+loadSprite("idle1", "public/sprites/jack-o-lantern/Idle1.png");
 
 go("home");
