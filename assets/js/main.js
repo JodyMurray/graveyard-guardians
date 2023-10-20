@@ -5,6 +5,7 @@ kaboom({
     canvas: document.getElementById("game-canvas"),
 });
 
+
 // Define the home page scene
 scene("home", () => {
     // Display background image
