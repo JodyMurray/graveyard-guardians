@@ -181,7 +181,7 @@ scene("game", () => {
   const floor = add([
     rect(width(), 10),
     pos(0, (4 * height()) / 5),
-    color(rgb(18,33,35)),
+    color(rgb(18, 33, 35)),
     area(),
     solid(),
     "ground",
@@ -194,6 +194,9 @@ scene("game", () => {
     scale(0.1),
     area(),
     body({ isStatic: true }),
+    {
+      dir: vec2(1, 0),
+    },
   ]);
 
   let isWalking = false;
@@ -201,12 +204,14 @@ scene("game", () => {
     isWalking = true;
     player.flipX(false);
     player.move(120, 0);
+    player.dir = vec2(1, 0);
   });
 
   // Handle player movement
   keyDown("left", () => {
     player.move(-120, 0);
     player.flipX(true);
+    player.dir = vec2(-1, 0);
   });
 
   keyDown("up", () => {
@@ -220,6 +225,128 @@ scene("game", () => {
   keyPress("escape", () => {
     go("home");
   });
+
+  loadSprite("red", "public/sprites/bullet/red.png");
+
+  loadSprite("zombie_male", "public/sprites/zombie_male/Walk1.png");
+  loadSprite("zombie_female", "public/sprites/zombie_female/Walk1.png");
+
+  // Define a variable to keep track of the number of spawned enemies
+  let numSpawnedEnemies = 0;
+
+  // Handle space bar key press to fire bullets
+  keyPress("space", () => {
+    const bullet = createBullet(player);
+  });
+
+  // Define the moveEnemy function
+  function moveEnemy(enemy) {
+    const movementDirection = player.pos.sub(enemy.pos).unit();
+    enemy.move(movementDirection.scale(2000 * dt()));
+    // Flip the enemy sprite based on player's position
+    if (player.pos.x > enemy.pos.x) {
+      // Player is on the right-hand side of the enemy
+      enemy.flipX(false);
+    } else {
+      // Player is on the left-hand side of the enemy
+      enemy.flipX(true);
+    }
+  }
+
+  const spawnRandomEnemy = (x, y) => {
+    const randomSpawnPoint = spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
+    const randomEnemySprite = enemySprites[Math.floor(Math.random() * enemySprites.length)];
+
+    // Check if the maximum number of enemies has been reached
+    if (numSpawnedEnemies >= 20) {
+      // Stop spawning new enemies
+      return;
+    }
+
+    const enemy = add([
+      sprite(randomEnemySprite),
+      pos(x, y),
+      origin("center"),
+      scale(0.15),
+      layer("bullet"),
+      area(),
+      "enemy",
+    ]);
+
+    // Increment the number of spawned enemies
+    numSpawnedEnemies++;
+
+    // Handle enemy movement towards the player
+    enemy.action(() => {
+      moveEnemy(enemy);
+    });
+
+    // Handle collisions with player
+    //enemy.onCollide("player", () => {
+    // Handle collision logic, e.g., player loses life, enemy is destroyed, etc.
+    // ...
+    //  enemy.destroy();
+    //});
+
+    return enemy;
+  };
+
+  // Update function to spawn random enemies at random positions
+  const spawnPoints = [
+    { x: 0, y: 440 },
+    { x: 930, y: 440 },
+  ];
+
+  const enemySprites = ["zombie_male", "zombie_female"];
+
+  const spawnInterval = setInterval(() => {
+    const randomSpawnPoint = spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
+    spawnRandomEnemy(randomSpawnPoint.x, randomSpawnPoint.y);
+  }, 3000); // Spawn a new enemy every 3 seconds (adjust the interval as needed)
+
+  function createBullet(player) {
+    const bulletSpeed = 10000;
+    const bulletDirection = player.dir;
+
+    const bullet = add([
+      sprite("red"),
+      pos(player.pos),
+      origin("center"),
+      area({ width: 8, height: 8 }),
+      layer("bullet"),
+      {
+        dir: bulletDirection,
+      },
+    ]);
+
+    // Flip the bullet sprite if shooting left
+    if (bulletDirection.x === -1) {
+      bullet.flipX(true);
+    }
+
+    // Update function to move the bullet
+    bullet.action(() => {
+      bullet.move(bullet.dir.scale(bulletSpeed * dt()));
+    });
+
+    // Remove the bullet when it goes out of the screen
+    bullet.action(() => {
+      if (bullet.pos.x < 0 || bullet.pos.x > width() || bullet.pos.y < 0 || bullet.pos.y > height()) {
+        bullet.destroy();
+      }
+    });
+
+    // Handle collisions with enemies
+    bullet.collides("enemy", (enemy) => {
+      // Handle bullet-enemy collision logic here
+      // For example, destroy the enemy and the bullet
+      enemy.destroy();
+      bullet.destroy();
+    });
+
+    return bullet;
+  }
+
 });
 
 // Load assets and start the home page scene
