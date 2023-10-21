@@ -7,6 +7,9 @@ kaboom({
 
 let spawnInterval;
 
+const SPEED = 120;
+const JUMP_FORCE = 200;
+
 // Define the home page scene
 scene("home", () => {
   // Display background image
@@ -259,6 +262,7 @@ scene("instructions", () => {
       },
     },
   ]);
+
   // Handle mouse clicks on the buttons
   mouseClick(() => {
     const { x, y } = mousePos();
@@ -306,6 +310,9 @@ scene("game", () => {
     },
   ]);
 
+  let currentSpriteIndex = 0;
+  const spriteChangeDelay = 0.1;
+
   // Speaker button
   const speakerButton = add([
     pos(50, height() - 50),
@@ -345,8 +352,8 @@ scene("game", () => {
 
   const healthBar = add([
     rect(200, 20), // Width: 200, Height: 20
-    pos(50, 50),   // Position of the health bar on the screen
-    layer("ui"),    // UI layer
+    pos(50, 50), // Position of the health bar on the screen
+    layer("ui"), // UI layer
     {
       value: player.health, // Initial player health
     },
@@ -365,23 +372,48 @@ scene("game", () => {
     healthBar.color = rgb(255 * (1 - percentage), 255 * percentage, 0);
   }
 
-  let isWalking = false;
-  keyDown("right", () => {
-    isWalking = true;
-    player.flipX(false);
-    player.move(120, 0);
+  let currentFrame = 0; // Track the current frame index
+
+  // Assuming you have an object called 'obj' that you want to animate
+
+  onKeyDown("right", async () => {
+    currentSpriteIndex++;
+
+    if (currentSpriteIndex >= spriteNames.length) {
+      currentSpriteIndex = 0;
+    }
+    const nextSpriteName = spriteNames[currentSpriteIndex];
+    player.move(SPEED, 0), (player.flipX = false);
+    await wait(spriteChangeDelay);
+    player.use(sprite(nextSpriteName));
+
     player.dir = vec2(1, 0);
   });
 
   // Handle player movement
-  keyDown("left", () => {
-    player.move(-120, 0);
+  onKeyDown("left", async () => {
+    currentSpriteIndex++;
+    if (currentSpriteIndex >= spriteNames.length) {
+      currentSpriteIndex = 0;
+    }
+    const nextSpriteName = spriteNames[currentSpriteIndex];
+    player.move(-SPEED, 0);
+    await wait(spriteChangeDelay);
+    player.use(sprite(nextSpriteName));
     player.flipX(true);
-    player.dir = vec2(-1, 0);
+    player.dir = vec2(1, 0);
   });
 
-  keyDown("up", () => {
-    player.move(0, -220);
+  const jumpSpriteName = "jump";
+
+  onKeyDown("up", () => {
+    player.move(0, -SPEED, JUMP_FORCE);
+
+    if (player.flipX) {
+      player.use(sprite(jumpSpriteName, { flipX: true }));
+    } else {
+      player.use(sprite(jumpSpriteName));
+    }
   });
 
   keyDown("down", () => {
@@ -398,7 +430,6 @@ scene("game", () => {
   loadSprite("zombie_male", "public/sprites/zombie_male/Walk1.png");
   loadSprite("zombie_female", "public/sprites/zombie_female/Walk1.png");
 
-
   // Define a variable to keep track of the number of spawned enemies
   let numSpawnedEnemies = 0;
 
@@ -413,16 +444,17 @@ scene("game", () => {
 
   // Define the moveEnemy function
   function moveEnemy(enemy) {
-
     const distanceToPlayer = player.pos.sub(enemy.pos).len(); // Calculate distance to player
 
     // If the enemy is close to the player, perform attack
-    if (distanceToPlayer < 50) { // Adjust the threshold as needed
+    if (distanceToPlayer < 50) {
+      // Adjust the threshold as needed
       performAttack(enemy);
     }
 
     // Randomly decide whether the enemy should jump
-    if (!enemy.jumping && Math.random() < 0.02) { // Adjust the probability of jumping as needed
+    if (!enemy.jumping && Math.random() < 0.02) {
+      // Adjust the probability of jumping as needed
       enemy.jumpForce = -10000; // Set a negative jump force to move upwards (higher jump)
       enemy.gravity = 8000; // Set a positive gravity to bring the enemy down quickly
       enemy.jumping = true; // Set a flag to indicate that the enemy is jumping
@@ -453,7 +485,8 @@ scene("game", () => {
     }
 
     function performAttack(enemy) {
-      if (canAttack) { // Check if the enemy can attack (based on timer)
+      if (canAttack) {
+        // Check if the enemy can attack (based on timer)
         canAttack = false; // Set canAttack to false to prevent rapid attacks
         setTimeout(() => {
           canAttack = true; // Allow the enemy to attack again after the delay
@@ -486,12 +519,13 @@ scene("game", () => {
         speakerButton.clickAction();
       }
     });
-
   }
 
   const spawnRandomEnemy = (x, y) => {
-    const randomSpawnPoint = spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
-    const randomEnemySprite = enemySprites[Math.floor(Math.random() * enemySprites.length)];
+    const randomSpawnPoint =
+      spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
+    const randomEnemySprite =
+      enemySprites[Math.floor(Math.random() * enemySprites.length)];
 
     // Check if the maximum number of enemies has been reached
     if (numSpawnedEnemies >= 40) {
@@ -544,7 +578,8 @@ scene("game", () => {
   const enemySprites = ["zombie_male", "zombie_female"];
 
   spawnInterval = setInterval(() => {
-    const randomSpawnPoint = spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
+    const randomSpawnPoint =
+      spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
     spawnRandomEnemy(randomSpawnPoint.x, randomSpawnPoint.y);
   }, 2000); // Spawn a new enemy every 2 seconds (adjust the interval as needed)
 
@@ -575,7 +610,12 @@ scene("game", () => {
 
     // Remove the bullet when it goes out of the screen
     bullet.action(() => {
-      if (bullet.pos.x < 0 || bullet.pos.x > width() || bullet.pos.y < 0 || bullet.pos.y > height()) {
+      if (
+        bullet.pos.x < 0 ||
+        bullet.pos.x > width() ||
+        bullet.pos.y < 0 ||
+        bullet.pos.y > height()
+      ) {
         bullet.destroy();
       }
     });
@@ -600,13 +640,31 @@ scene("game", () => {
 
   // Update health bar to reflect player's health
   updateHealthBar();
-
 });
 
 // Load assets and start the home page scene
 loadSprite("background-home", "/public/background-images/home_page.png", {
   sliceX: 1,
   sliceY: 1,
+});
+
+const spriteNames = ["idle1", "walk1", "walk2", "walk3", "walk5"];
+const spritePaths = [
+  "public/sprites/jack-o-lantern/Idle1.png",
+  "public/sprites/jack-o-lantern/walk1.png",
+  "public/sprites/jack-o-lantern/walk2.png",
+  "public/sprites/jack-o-lantern/walk3.png",
+  "public/sprites/jack-o-lantern/walk4.png",
+  "public/sprites/jack-o-lantern/walk5.png",
+];
+const jumpSpriteName = ["jump", "public/sprites/jack-o-lantern/jump1.png"];
+
+jumpSpriteName.forEach((name, index) => {
+  loadSprite(name, jumpSpriteName[index]);
+});
+
+spriteNames.forEach((name, index) => {
+  loadSprite(name, spritePaths[index]);
 });
 
 loadSprite("window", "/public/background-images/window.jpg", {
@@ -629,6 +687,18 @@ loadSprite(
     sliceY: 1,
   }
 );
+
+loadSprite("player", "public/sprites/jack-o-lantern/Idle1.png", {
+  sliceX: 0,
+  sliceY: 3,
+  anims: {
+    walk: {
+      from: 0,
+      to: 3,
+      loop: true,
+    },
+  },
+});
 
 // Load the speaker sprite for the speaker button
 loadSprite("sound", "public/sprites/speaker/sound.png");
