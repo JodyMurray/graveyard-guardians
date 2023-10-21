@@ -374,10 +374,12 @@ scene("game", () => {
   }
 
   let currentFrame = 0; // Track the current frame index
+  let originalFacingDirection = false; // Variable to store the original facing direction
 
   // Assuming you have an object called 'obj' that you want to animate
 
   onKeyDown("right", async () => {
+    originalFacingDirection = false;
     currentSpriteIndex++;
 
     if (currentSpriteIndex >= spriteNames.length) {
@@ -393,6 +395,7 @@ scene("game", () => {
 
   // Handle player movement
   onKeyDown("left", async () => {
+    originalFacingDirection = true;
     currentSpriteIndex++;
     if (currentSpriteIndex >= spriteNames.length) {
       currentSpriteIndex = 0;
@@ -402,7 +405,7 @@ scene("game", () => {
     await wait(spriteChangeDelay);
     player.use(sprite(nextSpriteName));
     player.flipX(true);
-    player.dir = vec2(1, 0);
+    player.dir = vec2(-1, 0);
   });
 
   onKeyDown("up", async () => {
@@ -410,19 +413,16 @@ scene("game", () => {
     if (currentSpriteIndex >= jumpNames.length) {
       currentSpriteIndex = 0;
     }
-    const nextJumpSprite = jumpNames[currentSpriteIndex];
-
+  
     const jumpForce = JUMP_FORCE;
-
-    if (player.dir.x > 0) {
-      player.use(sprite(nextJumpSprite, { flipX: false }));
-    } else if (player.dir.x < 0) {
-      player.use(sprite(nextJumpSprite, { flipX: true }));
-    } else {
-      player.use(sprite(nextJumpSprite, { flipX: player.flipX }));
-    }
-
+  
+    // Apply jump force to the player without changing the facing direction
     player.jump(0, -SPEED, jumpForce);
+  
+    // Use the correct jump sprite based on the original facing direction
+    player.use(
+      sprite(jumpNames[currentSpriteIndex], { flipX: originalFacingDirection })
+    );
   });
 
   keyDown("down", () => {
@@ -510,6 +510,7 @@ scene("game", () => {
 
         // Check if the player is out of health
         if (player.health <= 0) {
+          musicPlayer.pause();
           // Perform game over logic here, e.g., switch to game over scene
           go("home");
         }
