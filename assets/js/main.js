@@ -327,7 +327,7 @@ scene("game", () => {
   ]);
 
   let currentSpriteIndex = 0;
-  const spriteChangeDelay = 0.1;
+  const spriteChangeDelay = 0.05;
 
   // Speaker button
   const speakerButton = add([
@@ -700,11 +700,6 @@ loadSprite("window", "/public/background-images/window.jpg", {
   sliceY: 1,
 });
 
-loadSprite("walk1", "public/sprites/jack-o-lantern/walk1.png", {
-  sliceX: 4,
-  sliceY: 1,
-  animSpeed: 0.15,
-});
 
 loadSprite("idle1", "public/sprites/jack-o-lantern/Idle1.png");
 loadSprite(
