@@ -1,9 +1,16 @@
+import level1Layout from "./levels/level_1.js";
+import loadLevelAssets from "./levels/level_assets.js";
+import generateMappings from "./levels/generalMapping.js";
+
 // Initialize kaboom context
 kaboom({
   width: 900,
   height: 600,
   canvas: document.getElementById("game-canvas"),
 });
+
+// load tiles
+loadLevelAssets()
 
 let spawnInterval;
 
@@ -447,6 +454,11 @@ scene("game", () => {
 
   // Update health bar to reflect player's health
   updateHealthBar();
+
+  // assign tiles to map layout
+  const tileMapping = generateMappings()
+  // attach tiles to game
+  const gameLevel = addLevel(level1Layout, tileMapping)
 
 });
 
