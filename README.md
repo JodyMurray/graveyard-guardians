@@ -21,6 +21,7 @@ The purpose of the game is to provide players with a fun and entertaining experi
 
 ## startGame
 ![Instructions](./assets/images/howplay.png)
+<br>
 ![firstlook](./assets/images/startpage.png)
 
 ## User Experience (UX)
