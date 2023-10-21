@@ -7,6 +7,7 @@
 * [User Experience (UX)](#user-experience-ux)
     * [User Stories](#user-stories)
 * [Technologies](#technologies)
+*[Credits](#source--credits)
 
 
 
@@ -46,5 +47,9 @@ The purpose of the game is to provide players with a fun and entertaining experi
 * Javascript
 * Kaboom.js
 
-## Credits
-I fetched help for coding from - Pixabay for sounds, Flaticon for Background image, Freepik for images, and Remove.bg for Remove background image.
+## Source & Credits
+We took help for this project from following:
+* Pixabay for sounds - https://pixabay.com/sound-effects/
+* Flaticon for Background image - https://www.flaticon.com/search?word=halloween%20background
+* Freepik for images - https://www.freepik.com/search?format=search&query=halloween
+* Remove.bg for Remove background image - https://www.remove.bg/upload
