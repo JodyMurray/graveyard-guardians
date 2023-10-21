@@ -451,6 +451,7 @@ scene("game", () => {
 
   // Handle space bar key press to fire bullets
   keyPress("space", () => {
+    play("gunshot");
     const bullet = createBullet(player);
   });
 
@@ -500,6 +501,7 @@ scene("game", () => {
 
     function performAttack(enemy) {
       if (canAttack) {
+        play("player-hit");
         // Check if the enemy can attack (based on timer)
         canAttack = false; // Set canAttack to false to prevent rapid attacks
         setTimeout(() => {
@@ -513,11 +515,9 @@ scene("game", () => {
         // Update health bar
         updateHealthBar();
 
-        player.health = 0; // Set the player's health to 0 to indicate death
-        updateHealthBar();
-
         // Check if the player is out of health
         if (player.health <= 0) {
+          play("player-death");
           musicPlayer.pause();
           // Switch to game over scene with the number of zombies killed as a parameter
           go("gameOver", { zombiesKilled: destroyedZombies });
@@ -578,6 +578,7 @@ scene("game", () => {
 
       // Check if the player is out of health
       if (player.health <= 0) {
+        play("player-death");
         musicPlayer.pause();
         // Switch to game over scene with the number of zombies killed as a parameter
         go("gameOver", { zombiesKilled: destroyedZombies });
@@ -641,11 +642,13 @@ scene("game", () => {
     // Handle collisions with enemies
     bullet.collides("enemy", (enemy) => {
       // Decrease enemy health
+      play("zombie-hit");
       enemy.health = enemy.health || enemyHealth;
       enemy.health--; // Decrease enemy health by 1 each time they are hit
 
       // Check if the enemy has no health left
       if (enemy.health <= 0) {
+        play("enemy-death");
         // If the enemy is out of health, destroy it
         enemy.destroy();
         destroyedZombies++;
@@ -938,5 +941,14 @@ loadSprite("mute", "public/sprites/speaker/mute.png");
 // Load the background music
 loadSound("home-music", "/public/sound/home.ogg");
 loadSound("game1-music", "/public/sound/game1.ogg");
+
+// Load the gunshot sound
+loadSound("gunshot", "/public/sound/gunshot.mp3");
+// Load the hit sound
+loadSound("zombie-hit", "/public/sound/zombie-hit.mp3");
+loadSound("player-hit", "/public/sound/player-hit.mp3");
+// Load the death sound
+loadSound("enemy-death", "/public/sound/death.mp3");
+loadSound("player-death", "/public/sound/player-death.mp3");
 
 go("home");
