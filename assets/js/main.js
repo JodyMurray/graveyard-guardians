@@ -1,3 +1,7 @@
+import level1Layout from "./levels/level_1.js";
+import loadLevelAssets from "./levels/level_assets.js";
+import generateMappings from "./levels/generalMapping.js";
+
 // Initialize kaboom context
 kaboom({
   width: 900,
@@ -5,6 +9,9 @@ kaboom({
   canvas: document.getElementById("game-canvas"),
 });
 
+
+// load tiles
+loadLevelAssets()
 
 let spawnInterval;
 
@@ -289,6 +296,14 @@ scene("instructions", () => {
 scene("game", () => {
   add([sprite("background_cemetery"), layer("bg"), scale(0.53)]);
 
+  // assign tiles to map layout
+  const tileMapping = generateMappings()
+  // attach tiles to game
+  const map =  []
+  for (let layout of level1Layout){
+    map.push(addLevel(layout, tileMapping))
+  }
+  
   const floor = add([
     rect(width(), 10),
     pos(0, (4 * height()) / 5),
