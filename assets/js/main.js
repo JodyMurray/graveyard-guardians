@@ -317,6 +317,48 @@ scene("game", () => {
     },
   ]);
 
+  const potion = add([
+    sprite("potion"),
+    pos(130, 495),
+    scale(0.2),
+    origin("center"),
+    area(),
+    "potion",
+  ]);
+
+  player.onCollide("potion", (health) => {
+    // Increase the player's health
+    player.health += 1;
+
+    // Update the health bar
+    updateHealthBar();
+
+    // Destroy the health item after the collision
+    destroy(potion);
+  });
+
+
+  function updatePlayerPosition() {
+    const playerPosition = player.pos;
+
+    // Check if the player falls off the screen vertically
+    if (playerPosition.y > height()) {
+      // Player fell off the screen
+      handlePlayerDeath();
+    }
+  }
+
+  // Function to handle player's death
+  function handlePlayerDeath() {
+    musicPlayer.pause(); // Pause the music
+    go("gameOver", { zombiesKilled: destroyedZombies }); // Switch to the game over scene
+  }
+
+  // Update function for the game scene
+  action(() => {
+    updatePlayerPosition();
+  });
+
   let currentSpriteIndex = 0;
   const spriteChangeDelay = 0.05;
 
@@ -922,6 +964,8 @@ loadSprite(
     sliceY: 1,
   }
 );
+
+loadSprite("potion", "public/sprites/potion.png");
 
 loadSprite("player", "public/sprites/jack-o-lantern/Idle1.png", {
   sliceX: 0,
