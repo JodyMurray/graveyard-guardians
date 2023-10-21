@@ -16,6 +16,7 @@
 The purpose of the game is to provide players with a fun and entertaining experience. It's a way for players to immerse themselves in the Halloween spirit and enjoy the excitement of action-packed gameplay set in a spooky and supernatural environment.
 
 ## wireframes
+
 ![wireframe](./assets/images/wireframe.png)
 
 ## User Experience (UX)
