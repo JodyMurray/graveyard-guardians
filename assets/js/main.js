@@ -17,6 +17,7 @@ let spawnInterval;
 const SPEED = 120;
 const JUMP_FORCE = 200;
 let destroyedZombies = 0;
+let currentPotion = null;
 
 // Define the home page scene
 scene("home", () => {
@@ -316,6 +317,76 @@ scene("game", () => {
     },
   ]);
 
+  function spawnPotion() {
+    if (currentPotion) {
+      destroy(currentPotion); // Destroy the current potion if it exists
+    }
+  
+    // Define an array of positions where potions can spawn
+    const spawnPositions = [
+      pos(130, 495),
+      pos(430, 175),
+      pos(130, 108),
+      pos(750, 365),
+      pos(750, 108),
+    ];
+  
+    // Choose a random position from the spawnPositions array
+    const randomPosition = spawnPositions[Math.floor(Math.random() * spawnPositions.length)];
+  
+    // Spawn a new potion at the selected position
+    currentPotion = add([
+      sprite("potion"),
+      randomPosition,
+      scale(0.2),
+      origin("center"),
+      area(),
+      "potion",
+    ]);
+  }
+
+  // Call spawnPotion initially to spawn the first potion
+  spawnPotion();
+
+  // Use loop to spawn a new potion every 30 seconds
+  loop(30, () => {
+    spawnPotion();
+  });
+
+  // Player collects the potion
+  player.onCollide("potion", () => {
+    // Increase the player's health
+    player.health += 1;
+
+    // Update the health bar
+    updateHealthBar();
+
+    // Destroy the health item after the collision
+    destroy(currentPotion);
+  });
+
+
+  function updatePlayerPosition() {
+    const playerPosition = player.pos;
+
+    // Check if the player falls off the screen vertically
+    if (playerPosition.y > height()) {
+      // Player fell off the screen
+      handlePlayerDeath();
+    }
+  }
+
+  // Function to handle player's death
+  function handlePlayerDeath() {
+    musicPlayer.pause(); // Pause the music
+    go("gameOver", { zombiesKilled: destroyedZombies }); // Switch to the game over scene
+  }
+
+  // Update function for the game scene
+  action(() => {
+    updatePlayerPosition();
+  });
+
   let currentSpriteIndex = 0;
   const spriteChangeDelay = 0.05;
 
@@ -545,12 +616,6 @@ scene("game", () => {
     const randomEnemySprite =
       enemySprites[Math.floor(Math.random() * enemySprites.length)];
 
-    // Check if the maximum number of enemies has been reached
-    if (numSpawnedEnemies >= 40) {
-      // Stop spawning new enemies
-      return;
-    }
-
     const enemy = add([
       sprite(randomEnemySprite),
       pos(x, y),
@@ -563,6 +628,7 @@ scene("game", () => {
 
     // Increment the number of spawned enemies
     numSpawnedEnemies++;
+    console.log(numSpawnedEnemies)
 
     // Handle enemy movement towards the player
     enemy.action(() => {
@@ -655,13 +721,6 @@ scene("game", () => {
       }
 
       bullet.destroy(); // Destroy the bullet after hitting an enemy
-
-      // Check if the player has killed all enemies
-      if (destroyedZombies >= 40) {
-        musicPlayer.pause();
-        // Switch to congratulations scene with the number of zombies killed as a parameter
-        go("congratulations", { zombiesKilled: destroyedZombies });
-      }
     });
 
     return bullet;
@@ -669,9 +728,10 @@ scene("game", () => {
 
   // Update health bar to reflect player's health
   updateHealthBar();
+
 });
 
-// Game over scene you lost
+// Game over scene
 scene("gameOver", ({ zombiesKilled }) => {
   add([
     sprite("background_cemetery"),
@@ -698,113 +758,6 @@ scene("gameOver", ({ zombiesKilled }) => {
       },
     },
     text("Try Again!", {
-      size: 50,
-      origin: "center",
-    }),
-  ]);
-
-  // Speaker button
-  const speakerButton = add([
-    pos(50, height() - 50),
-    origin("center"),
-    layer("ui"),
-    area(),
-    sprite("sound"), // Initial sprite based on isMuted variable
-    scale(0.1),
-    color(255, 255, 255),
-    {
-      value: "Speaker",
-      isPlaying: true, // Added a property to track if music is playing
-    },
-    {
-      clickAction: function () {
-        if (this.isPlaying) {
-          this.use("mute"); // If music is playing, switch to mute sprite
-          this.isPlaying = false; // Toggle playing state
-          musicPlayer.pause(); // Pause the music
-        } else {
-          this.use("sound"); // If music is paused, switch to sound sprite
-          this.isPlaying = true; // Toggle playing state
-          musicPlayer.play(); // Start playing the music
-        }
-      },
-    },
-  ]);
-
-  // Function to play background music and set it to loop
-  const musicPlayer = play("home-music", {
-    loop: true, // Set loop to true to play the music in a loop
-    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
-  });
-
-  // Initially, music starts playing
-  musicPlayer.play();
-
-  // Function to generate a random shade of red
-  function randomRed() {
-    return rgb(rand(150, 255), rand(0, 50), rand(0, 50));
-  }
-
-  // Register onUpdate events for the buttons to handle bloody hover effects
-  restartButton.onUpdate(() => {
-    if (restartButton.isHovering()) {
-      restartButton.color = randomRed(); // Change to a random shade of red when hovered
-      restartButton.scale = vec2(1.2);
-    } else {
-      restartButton.scale = vec2(1);
-      restartButton.color = rgb(255, 0, 0); // Default red color for the button
-    }
-  });
-
-  mouseClick(() => {
-    const { x, y } = mousePos();
-    if (
-      x > restartButton.pos.x - restartButton.width / 2 &&
-      x < restartButton.pos.x + restartButton.width / 2 &&
-      y > restartButton.pos.y - restartButton.height / 2 &&
-      y < restartButton.pos.y + restartButton.height / 2
-    ) {
-      restartButton.clickAction();
-    }
-  });
-
-  // Clear the spawn interval when switching to another scene
-  clearInterval(spawnInterval);
-});
-
-// Congraulations scene you won
-scene("congratulations", ({ zombiesKilled }) => {
-  // Reset destroyedZombies to 0 when entering the game scene
-  destroyedZombies = 0;
-
-  add([
-    sprite("background_cemetery"),
-    layer("bg"),
-    scale(0.53),
-    text(
-      `Congratulations!\nYou destroyed all zombies!\nZombies killed: ${zombiesKilled}`,
-      24
-    ),
-    origin("center"),
-    pos(width() / 2, height() / 2),
-  ]);
-
-  const restartButton = add([
-    pos(width() / 2, height() / 2 + 80),
-    origin("center"),
-    layer("ui"),
-    area(),
-    color(255, 230, 0),
-    {
-      value: "Restart",
-      clickAction: () => {
-        // Reset destroyedZombies to 0 when entering the game scene
-        destroyedZombies = 0;
-        musicPlayer.pause();
-        go("home");
-      },
-    },
-    text("Next Round!", {
       size: 50,
       origin: "center",
     }),
@@ -921,6 +874,8 @@ loadSprite(
     sliceY: 1,
   }
 );
+
+loadSprite("potion", "public/sprites/potion.png");
 
 loadSprite("player", "public/sprites/jack-o-lantern/Idle1.png", {
   sliceX: 0,

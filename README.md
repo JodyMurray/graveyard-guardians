@@ -7,6 +7,7 @@
 * [User Experience (UX)](#user-experience-ux)
     * [User Stories](#user-stories)
 * [Technologies](#technologies)
+*[Credits](#source--credits)
 
 
 
@@ -23,7 +24,10 @@ The purpose of the game is to provide players with a fun and entertaining experi
 ![Instructions](./assets/images/howplay.png)
 <br>
 ![firstlook](./assets/images/startpage.png)
-
+<br>
+![NextRoundlook](./assets/images/nextground.png)
+<br>
+                 
 ## User Experience (UX)
 -   ### User stories
     As a **(role)** I can **(capability)**, so that **(received benefit)**
@@ -42,3 +46,10 @@ The purpose of the game is to provide players with a fun and entertaining experi
 * CSS
 * Javascript
 * Kaboom.js
+
+## Source & Credits
+We took help for this project from following:
+* Pixabay for sounds - https://pixabay.com/sound-effects/
+* Flaticon for Background image - https://www.flaticon.com/search?word=halloween%20background
+* Freepik for images - https://www.freepik.com/search?format=search&query=halloween
+* Remove.bg for Remove background image - https://www.remove.bg/upload
