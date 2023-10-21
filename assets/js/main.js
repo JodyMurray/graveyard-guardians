@@ -307,7 +307,6 @@ scene("game", () => {
   const player = add([
     sprite("idle1"),
     pos(width() / 2, height() / 2),
-    origin("center"),
     scale(0.1),
     area(),
     body({ isStatic: true }),
