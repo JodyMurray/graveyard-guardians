@@ -7,6 +7,7 @@
 * [User Experience (UX)](#user-experience-ux)
     * [User Stories](#user-stories)
 * [Technologies](#technologies)
+*[Credits](#credits)
 
 
 
