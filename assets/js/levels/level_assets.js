@@ -130,4 +130,36 @@ export default function loadLevelAssets() {
       sliceY: 1
     }
   );
+  loadSprite(
+    'skull-bone',
+    "public/sprites/Tiles/Bone (1).png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
+  loadSprite(
+    'skull',
+    "public/sprites/Tiles/Bone (2).png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
+  loadSprite(
+    'three-bones',
+    "public/sprites/Tiles/Bone (3).png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
+  loadSprite(
+    'two-bone',
+    "public/sprites/Tiles/Bone (4).png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
 }
