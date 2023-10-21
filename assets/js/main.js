@@ -404,15 +404,19 @@ scene("game", () => {
     player.dir = vec2(1, 0);
   });
 
-  const jumpSpriteName = "jump";
+  onKeyDown("up", async () => {
+    currentSpriteIndex++;
+    if (currentSpriteIndex >= jumpNames.length) {
+      currentSpriteIndex = 0;
+    }
+    const nextJumpSprite = jumpNames[currentSpriteIndex];
 
-  onKeyDown("up", () => {
-    player.move(0, -SPEED, JUMP_FORCE);
+    player.jump(0, -SPEED, JUMP_FORCE);
 
     if (player.flipX) {
-      player.use(sprite(jumpSpriteName, { flipX: true }));
+      player.use(sprite(nextJumpSprite, { flipX: true }));
     } else {
-      player.use(sprite(jumpSpriteName));
+      player.use(sprite("idle1"));
     }
   });
 
@@ -657,12 +661,15 @@ const spritePaths = [
   "public/sprites/jack-o-lantern/walk4.png",
   "public/sprites/jack-o-lantern/walk5.png",
 ];
-const jumpSpriteName = ["jump", "public/sprites/jack-o-lantern/jump1.png"];
-
-jumpSpriteName.forEach((name, index) => {
-  loadSprite(name, jumpSpriteName[index]);
+const jumpNames = ["jump1", "jump2", "jump3"];
+const jumpPaths = [
+  "public/sprites/jack-o-lantern/jump1.png",
+  "public/sprites/jack-o-lantern/jump2.png",
+  "public/sprites/jack-o-lantern/jump3.png",
+];
+jumpPaths.forEach((path, index) => {
+  loadSprite(jumpNames[index], path);
 });
-
 spriteNames.forEach((name, index) => {
   loadSprite(name, spritePaths[index]);
 });
