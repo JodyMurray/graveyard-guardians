@@ -5,13 +5,11 @@ kaboom({
   canvas: document.getElementById("game-canvas"),
 });
 
-<<<<<<< HEAD
-=======
+
 let spawnInterval;
 
 const SPEED = 120;
 const JUMP_FORCE = 200;
->>>>>>> f6702f1abe307f7fc6384deff82c11b1d580be27
 
 // Define the home page scene
 scene("home", () => {
