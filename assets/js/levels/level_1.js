@@ -2,6 +2,7 @@
  * Level 1 static components layout
  */
 const level1Layout = [
+  [
     "              ",
     "              ",
     "223        EFF",
@@ -10,7 +11,19 @@ const level1Layout = [
     "              ",
     "    123    122",
     "    45AB23 455",
-    " 127855556 455"
-]
+    " 127855556 455",
+  ],
+  [
+    "              ",
+    "              ",
+    " I            ",
+    "K             ",
+    "              ",
+    "              ",
+    "            I ",
+    "     H        ",
+    "       J    K ",
+  ]
+];
 
-export default level1Layout
+export default level1Layout;
