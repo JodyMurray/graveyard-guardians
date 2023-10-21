@@ -317,6 +317,27 @@ scene("game", () => {
     },
   ]);
 
+  const potion = add([
+    sprite("potion"),
+    pos(130, 495),
+    scale(0.2),
+    origin("center"),
+    area(),
+    "potion",
+  ]);
+
+  player.onCollide("potion", (health) => {
+    // Increase the player's health
+    player.health += 1;
+
+    // Update the health bar
+    updateHealthBar();
+
+    // Destroy the health item after the collision
+    destroy(potion);
+  });
+
+
   function updatePlayerPosition() {
     const playerPosition = player.pos;
 
@@ -940,6 +961,8 @@ loadSprite(
     sliceY: 1,
   }
 );
+
+loadSprite("potion", "public/sprites/potion.png");
 
 loadSprite("player", "public/sprites/jack-o-lantern/Idle1.png", {
   sliceX: 0,
