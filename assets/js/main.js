@@ -9,10 +9,14 @@ kaboom({
   canvas: document.getElementById("game-canvas"),
 });
 
+
 // load tiles
 loadLevelAssets()
 
 let spawnInterval;
+
+const SPEED = 120;
+const JUMP_FORCE = 200;
 
 // Define the home page scene
 scene("home", () => {
@@ -41,6 +45,7 @@ scene("home", () => {
     },
     {
       clickAction: () => {
+        musicPlayer.pause();
         go("game"); // Switch to the game scene when Start button is clicked
       },
     },
@@ -61,6 +66,7 @@ scene("home", () => {
     },
     {
       clickAction: () => {
+        musicPlayer.pause();
         go("instructions");
       },
     },
@@ -69,6 +75,43 @@ scene("home", () => {
       origin: "center",
     }),
   ]);
+
+  // Speaker button
+  const speakerButton = add([
+    pos(50, height() - 50),
+    origin("center"),
+    layer("ui"),
+    area(),
+    sprite("sound"), // Initial sprite based on isMuted variable
+    scale(0.1),
+    color(255, 255, 255),
+    {
+      value: "Speaker",
+      isPlaying: true, // Added a property to track if music is playing
+    },
+    {
+      clickAction: function () {
+        if (this.isPlaying) {
+          this.use("mute"); // If music is playing, switch to mute sprite
+          this.isPlaying = false; // Toggle playing state
+          musicPlayer.pause(); // Pause the music
+        } else {
+          this.use("sound"); // If music is paused, switch to sound sprite
+          this.isPlaying = true; // Toggle playing state
+          musicPlayer.play(); // Start playing the music
+        }
+      },
+    },
+  ]);
+
+  // Function to play background music and set it to loop
+  const musicPlayer = play("home-music", {
+    loop: true, // Set loop to true to play the music in a loop
+    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+  });
+
+  // Initially, music starts playing
+  musicPlayer.play();
 
   // Function to generate a random shade of red
   function randomRed() {
@@ -113,6 +156,13 @@ scene("home", () => {
       y < instructionsButton.pos.y + instructionsButton.height / 2
     ) {
       instructionsButton.clickAction();
+    } else if (
+      x > speakerButton.pos.x - speakerButton.width / 2 &&
+      x < speakerButton.pos.x + speakerButton.width / 2 &&
+      y > speakerButton.pos.y - speakerButton.height / 2 &&
+      y < speakerButton.pos.y + speakerButton.height / 2
+    ) {
+      speakerButton.clickAction();
     }
   });
 
@@ -124,6 +174,16 @@ scene("home", () => {
 // ...
 scene("instructions", () => {
   add([sprite("window"), layer("bg")]);
+
+  // Function to play background music and set it to loop
+  const musicPlayer = play("home-music", {
+    loop: true, // Set loop to true to play the music in a loop
+    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+  });
+
+  // Initially, music starts playing
+  musicPlayer.play();
+
   // Display instructions
   add([
     text("Instructions", 30),
@@ -172,6 +232,7 @@ scene("instructions", () => {
     },
     {
       clickAction: () => {
+        musicPlayer.pause();
         go("home"); // Switch to the home scene when the Back button is clicked
       },
     },
@@ -180,10 +241,55 @@ scene("instructions", () => {
       color: rgb(0, 0, 0),
       origin: "center",
     }),
-    onClick(() => {
-      go("home"); // Switch to the home scene when the Back button is clicked
-    }),
   ]);
+
+  // Speaker button
+  const speakerButton = add([
+    pos(50, height() - 50),
+    origin("center"),
+    layer("ui"),
+    area(),
+    sprite("sound"), // Initial sprite based on isMuted variable
+    scale(0.1),
+    color(255, 255, 255),
+    {
+      value: "Speaker",
+      isPlaying: true, // Added a property to track if music is playing
+    },
+    {
+      clickAction: function () {
+        if (this.isPlaying) {
+          this.use("mute"); // If music is playing, switch to mute sprite
+          this.isPlaying = false; // Toggle playing state
+          musicPlayer.pause(); // Pause the music
+        } else {
+          this.use("sound"); // If music is paused, switch to sound sprite
+          this.isPlaying = true; // Toggle playing state
+          musicPlayer.play(); // Start playing the music
+        }
+      },
+    },
+  ]);
+
+  // Handle mouse clicks on the buttons
+  mouseClick(() => {
+    const { x, y } = mousePos();
+    if (
+      x > backButton.pos.x - backButton.width / 2 &&
+      x < backButton.pos.x + backButton.width / 2 &&
+      y > backButton.pos.y - backButton.height / 2 &&
+      y < backButton.pos.y + backButton.height / 2
+    ) {
+      backButton.clickAction();
+    } else if (
+      x > speakerButton.pos.x - speakerButton.width / 2 &&
+      x < speakerButton.pos.x + speakerButton.width / 2 &&
+      y > speakerButton.pos.y - speakerButton.height / 2 &&
+      y < speakerButton.pos.y + speakerButton.height / 2
+    ) {
+      speakerButton.clickAction();
+    }
+  });
 });
 
 // Define the game scene
@@ -220,10 +326,50 @@ scene("game", () => {
     },
   ]);
 
+  let currentSpriteIndex = 0;
+  const spriteChangeDelay = 0.1;
+
+  // Speaker button
+  const speakerButton = add([
+    pos(50, height() - 50),
+    origin("center"),
+    layer("ui"),
+    area(),
+    sprite("sound"), // Initial sprite based on isMuted variable
+    scale(0.1),
+    color(255, 255, 255),
+    {
+      value: "Speaker",
+      isPlaying: true, // Added a property to track if music is playing
+    },
+    {
+      clickAction: function () {
+        if (this.isPlaying) {
+          this.use("mute"); // If music is playing, switch to mute sprite
+          this.isPlaying = false; // Toggle playing state
+          musicPlayer.pause(); // Pause the music
+        } else {
+          this.use("sound"); // If music is paused, switch to sound sprite
+          this.isPlaying = true; // Toggle playing state
+          musicPlayer.play(); // Start playing the music
+        }
+      },
+    },
+  ]);
+
+  // Function to play background music and set it to loop
+  const musicPlayer = play("game1-music", {
+    loop: true, // Set loop to true to play the music in a loop
+    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+  });
+
+  // Initially, music starts playing
+  musicPlayer.play();
+
   const healthBar = add([
     rect(200, 20), // Width: 200, Height: 20
-    pos(50, 50),   // Position of the health bar on the screen
-    layer("ui"),    // UI layer
+    pos(50, 50), // Position of the health bar on the screen
+    layer("ui"), // UI layer
     {
       value: player.health, // Initial player health
     },
@@ -242,23 +388,56 @@ scene("game", () => {
     healthBar.color = rgb(255 * (1 - percentage), 255 * percentage, 0);
   }
 
-  let isWalking = false;
-  keyDown("right", () => {
-    isWalking = true;
-    player.flipX(false);
-    player.move(120, 0);
+  let currentFrame = 0; // Track the current frame index
+  let originalFacingDirection = false; // Variable to store the original facing direction
+
+  // Assuming you have an object called 'obj' that you want to animate
+
+  onKeyDown("right", async () => {
+    originalFacingDirection = false;
+    currentSpriteIndex++;
+
+    if (currentSpriteIndex >= spriteNames.length) {
+      currentSpriteIndex = 0;
+    }
+    const nextSpriteName = spriteNames[currentSpriteIndex];
+    player.move(SPEED, 0), (player.flipX = false);
+    await wait(spriteChangeDelay);
+    player.use(sprite(nextSpriteName));
+
     player.dir = vec2(1, 0);
   });
 
   // Handle player movement
-  keyDown("left", () => {
-    player.move(-120, 0);
+  onKeyDown("left", async () => {
+    originalFacingDirection = true;
+    currentSpriteIndex++;
+    if (currentSpriteIndex >= spriteNames.length) {
+      currentSpriteIndex = 0;
+    }
+    const nextSpriteName = spriteNames[currentSpriteIndex];
+    player.move(-SPEED, 0);
+    await wait(spriteChangeDelay);
+    player.use(sprite(nextSpriteName));
     player.flipX(true);
     player.dir = vec2(-1, 0);
   });
 
-  keyDown("up", () => {
-    player.move(0, -220);
+  onKeyDown("up", async () => {
+    currentSpriteIndex++;
+    if (currentSpriteIndex >= jumpNames.length) {
+      currentSpriteIndex = 0;
+    }
+  
+    const jumpForce = JUMP_FORCE;
+  
+    // Apply jump force to the player without changing the facing direction
+    player.jump(0, -SPEED, jumpForce);
+  
+    // Use the correct jump sprite based on the original facing direction
+    player.use(
+      sprite(jumpNames[currentSpriteIndex], { flipX: originalFacingDirection })
+    );
   });
 
   keyDown("down", () => {
@@ -266,6 +445,7 @@ scene("game", () => {
   });
 
   keyPress("escape", () => {
+    musicPlayer.pause();
     go("home");
   });
 
@@ -288,16 +468,17 @@ scene("game", () => {
 
   // Define the moveEnemy function
   function moveEnemy(enemy) {
-
     const distanceToPlayer = player.pos.sub(enemy.pos).len(); // Calculate distance to player
 
     // If the enemy is close to the player, perform attack
-    if (distanceToPlayer < 50) { // Adjust the threshold as needed
+    if (distanceToPlayer < 50) {
+      // Adjust the threshold as needed
       performAttack(enemy);
     }
 
     // Randomly decide whether the enemy should jump
-    if (!enemy.jumping && Math.random() < 0.02) { // Adjust the probability of jumping as needed
+    if (!enemy.jumping && Math.random() < 0.02) {
+      // Adjust the probability of jumping as needed
       enemy.jumpForce = -10000; // Set a negative jump force to move upwards (higher jump)
       enemy.gravity = 8000; // Set a positive gravity to bring the enemy down quickly
       enemy.jumping = true; // Set a flag to indicate that the enemy is jumping
@@ -328,7 +509,8 @@ scene("game", () => {
     }
 
     function performAttack(enemy) {
-      if (canAttack) { // Check if the enemy can attack (based on timer)
+      if (canAttack) {
+        // Check if the enemy can attack (based on timer)
         canAttack = false; // Set canAttack to false to prevent rapid attacks
         setTimeout(() => {
           canAttack = true; // Allow the enemy to attack again after the delay
@@ -343,17 +525,32 @@ scene("game", () => {
 
         // Check if the player is out of health
         if (player.health <= 0) {
+          musicPlayer.pause();
           // Perform game over logic here, e.g., switch to game over scene
           go("home");
         }
       }
     }
 
+    // Handle mouse clicks on the buttons
+    mouseClick(() => {
+      const { x, y } = mousePos();
+      if (
+        x > speakerButton.pos.x - speakerButton.width / 2 &&
+        x < speakerButton.pos.x + speakerButton.width / 2 &&
+        y > speakerButton.pos.y - speakerButton.height / 2 &&
+        y < speakerButton.pos.y + speakerButton.height / 2
+      ) {
+        speakerButton.clickAction();
+      }
+    });
   }
 
   const spawnRandomEnemy = (x, y) => {
-    const randomSpawnPoint = spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
-    const randomEnemySprite = enemySprites[Math.floor(Math.random() * enemySprites.length)];
+    const randomSpawnPoint =
+      spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
+    const randomEnemySprite =
+      enemySprites[Math.floor(Math.random() * enemySprites.length)];
 
     // Check if the maximum number of enemies has been reached
     if (numSpawnedEnemies >= 40) {
@@ -406,7 +603,8 @@ scene("game", () => {
   const enemySprites = ["zombie_male", "zombie_female"];
 
   spawnInterval = setInterval(() => {
-    const randomSpawnPoint = spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
+    const randomSpawnPoint =
+      spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
     spawnRandomEnemy(randomSpawnPoint.x, randomSpawnPoint.y);
   }, 2000); // Spawn a new enemy every 2 seconds (adjust the interval as needed)
 
@@ -437,7 +635,12 @@ scene("game", () => {
 
     // Remove the bullet when it goes out of the screen
     bullet.action(() => {
-      if (bullet.pos.x < 0 || bullet.pos.x > width() || bullet.pos.y < 0 || bullet.pos.y > height()) {
+      if (
+        bullet.pos.x < 0 ||
+        bullet.pos.x > width() ||
+        bullet.pos.y < 0 ||
+        bullet.pos.y > height()
+      ) {
         bullet.destroy();
       }
     });
@@ -462,13 +665,34 @@ scene("game", () => {
 
   // Update health bar to reflect player's health
   updateHealthBar();
-
 });
 
 // Load assets and start the home page scene
 loadSprite("background-home", "/public/background-images/home_page.png", {
   sliceX: 1,
   sliceY: 1,
+});
+
+const spriteNames = ["idle1", "walk1", "walk2", "walk3", "walk5"];
+const spritePaths = [
+  "public/sprites/jack-o-lantern/Idle1.png",
+  "public/sprites/jack-o-lantern/walk1.png",
+  "public/sprites/jack-o-lantern/walk2.png",
+  "public/sprites/jack-o-lantern/walk3.png",
+  "public/sprites/jack-o-lantern/walk4.png",
+  "public/sprites/jack-o-lantern/walk5.png",
+];
+const jumpNames = ["jump1", "jump2", "jump3"];
+const jumpPaths = [
+  "public/sprites/jack-o-lantern/jump1.png",
+  "public/sprites/jack-o-lantern/jump2.png",
+  "public/sprites/jack-o-lantern/jump3.png",
+];
+jumpPaths.forEach((path, index) => {
+  loadSprite(jumpNames[index], path);
+});
+spriteNames.forEach((name, index) => {
+  loadSprite(name, spritePaths[index]);
 });
 
 loadSprite("window", "/public/background-images/window.jpg", {
@@ -492,4 +716,25 @@ loadSprite(
   }
 );
 
+loadSprite("player", "public/sprites/jack-o-lantern/Idle1.png", {
+  sliceX: 0,
+  sliceY: 3,
+  anims: {
+    walk: {
+      from: 0,
+      to: 3,
+      loop: true,
+    },
+  },
+});
+
+// Load the speaker sprite for the speaker button
+loadSprite("sound", "public/sprites/speaker/sound.png");
+loadSprite("mute", "public/sprites/speaker/mute.png");
+
+// Load the background music
+loadSound("home-music", "/public/sound/home.ogg");
+loadSound("game1-music", "/public/sound/game1.ogg");
+
 go("home");
+
