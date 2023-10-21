@@ -317,6 +317,27 @@ scene("game", () => {
     },
   ]);
 
+  function updatePlayerPosition() {
+    const playerPosition = player.pos;
+
+    // Check if the player falls off the screen vertically
+    if (playerPosition.y > height()) {
+      // Player fell off the screen
+      handlePlayerDeath();
+    }
+  }
+
+  // Function to handle player's death
+  function handlePlayerDeath() {
+    musicPlayer.pause(); // Pause the music
+    go("gameOver", { zombiesKilled: destroyedZombies }); // Switch to the game over scene
+  }
+
+  // Update function for the game scene
+  action(() => {
+    updatePlayerPosition();
+  });
+
   let currentSpriteIndex = 0;
   const spriteChangeDelay = 0.05;
 
