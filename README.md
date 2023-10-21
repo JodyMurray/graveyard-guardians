@@ -19,6 +19,10 @@ The purpose of the game is to provide players with a fun and entertaining experi
 
 ![wireframe](./assets/images/wireframe.png)
 
+## startGame
+![Instructions](./assets/images/howplay.png)
+![firstlook](./assets/images/startpage.png)
+
 ## User Experience (UX)
 -   ### User stories
     As a **(role)** I can **(capability)**, so that **(received benefit)**
