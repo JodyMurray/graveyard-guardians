@@ -45,3 +45,6 @@ The purpose of the game is to provide players with a fun and entertaining experi
 * CSS
 * Javascript
 * Kaboom.js
+
+## Credits
+I fetched help for coding from - Pixabay for sounds, Flaticon for Background image, Freepik for images, and Remove.bg for Remove background image.
