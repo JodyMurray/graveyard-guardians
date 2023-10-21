@@ -117,6 +117,34 @@ export default function generateMappings(){
             scale(0.5),
             solid(),
             "ground"
-        ]
+        ],
+        H: () => [
+            sprite('skull-bone'),
+            area(),
+            scale(0.5),
+            solid(),
+            "ground"
+        ],
+        I: () => [
+            sprite('skull'),
+            area(),
+            scale(0.5),
+            solid(),
+            "ground"
+        ],
+        J: () => [
+            sprite('three-bones'),
+            area(),
+            scale(0.5),
+            solid(),
+            "ground"
+        ],
+        K: () => [
+            sprite('two-bone'),
+            area(),
+            scale(0.5),
+            solid(),
+            "ground"
+        ],
     }
 }
