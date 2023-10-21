@@ -190,6 +190,14 @@ scene("instructions", () => {
 scene("game", () => {
   add([sprite("background_cemetery"), layer("bg"), scale(0.53)]);
 
+  // assign tiles to map layout
+  const tileMapping = generateMappings()
+  // attach tiles to game
+  const map =  []
+  for (let layout of level1Layout){
+    map.push(addLevel(layout, tileMapping))
+  }
+  
   const floor = add([
     rect(width(), 10),
     pos(0, (4 * height()) / 5),
@@ -455,13 +463,6 @@ scene("game", () => {
   // Update health bar to reflect player's health
   updateHealthBar();
 
-  // assign tiles to map layout
-  const tileMapping = generateMappings()
-  // attach tiles to game
-  const map =  []
-  for (let layout of level1Layout){
-    map.push(addLevel(layout, tileMapping))
-  }
 });
 
 // Load assets and start the home page scene
