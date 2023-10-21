@@ -411,13 +411,17 @@ scene("game", () => {
     }
     const nextJumpSprite = jumpNames[currentSpriteIndex];
 
-    player.jump(0, -SPEED, JUMP_FORCE);
+    const jumpForce = JUMP_FORCE;
 
-    if (player.flipX) {
+    if (player.dir.x > 0) {
+      player.use(sprite(nextJumpSprite, { flipX: false }));
+    } else if (player.dir.x < 0) {
       player.use(sprite(nextJumpSprite, { flipX: true }));
     } else {
-      player.use(sprite("idle1"));
+      player.use(sprite(nextJumpSprite, { flipX: player.flipX }));
     }
+
+    player.jump(0, -SPEED, jumpForce);
   });
 
   keyDown("down", () => {
