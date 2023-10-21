@@ -34,6 +34,7 @@ scene("home", () => {
     },
     {
       clickAction: () => {
+        musicPlayer.pause();
         go("game"); // Switch to the game scene when Start button is clicked
       },
     },
@@ -54,6 +55,7 @@ scene("home", () => {
     },
     {
       clickAction: () => {
+        musicPlayer.pause();
         go("instructions");
       },
     },
@@ -62,6 +64,43 @@ scene("home", () => {
       origin: "center",
     }),
   ]);
+
+  // Speaker button
+  const speakerButton = add([
+    pos(50, height() - 50),
+    origin("center"),
+    layer("ui"),
+    area(),
+    sprite("sound"), // Initial sprite based on isMuted variable
+    scale(0.1),
+    color(255, 255, 255),
+    {
+      value: "Speaker",
+      isPlaying: true, // Added a property to track if music is playing
+    },
+    {
+      clickAction: function () {
+        if (this.isPlaying) {
+          this.use("mute"); // If music is playing, switch to mute sprite
+          this.isPlaying = false; // Toggle playing state
+          musicPlayer.pause(); // Pause the music
+        } else {
+          this.use("sound"); // If music is paused, switch to sound sprite
+          this.isPlaying = true; // Toggle playing state
+          musicPlayer.play(); // Start playing the music
+        }
+      },
+    },
+  ]);
+
+  // Function to play background music and set it to loop
+  const musicPlayer = play("home-music", {
+    loop: true, // Set loop to true to play the music in a loop
+    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+  });
+
+  // Initially, music starts playing
+  musicPlayer.play();
 
   // Function to generate a random shade of red
   function randomRed() {
@@ -106,6 +145,13 @@ scene("home", () => {
       y < instructionsButton.pos.y + instructionsButton.height / 2
     ) {
       instructionsButton.clickAction();
+    } else if (
+      x > speakerButton.pos.x - speakerButton.width / 2 &&
+      x < speakerButton.pos.x + speakerButton.width / 2 &&
+      y > speakerButton.pos.y - speakerButton.height / 2 &&
+      y < speakerButton.pos.y + speakerButton.height / 2
+    ) {
+      speakerButton.clickAction();
     }
   });
 
@@ -117,6 +163,16 @@ scene("home", () => {
 // ...
 scene("instructions", () => {
   add([sprite("window"), layer("bg")]);
+
+  // Function to play background music and set it to loop
+  const musicPlayer = play("home-music", {
+    loop: true, // Set loop to true to play the music in a loop
+    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+  });
+
+  // Initially, music starts playing
+  musicPlayer.play();
+
   // Display instructions
   add([
     text("Instructions", 30),
@@ -165,6 +221,7 @@ scene("instructions", () => {
     },
     {
       clickAction: () => {
+        musicPlayer.pause();
         go("home"); // Switch to the home scene when the Back button is clicked
       },
     },
@@ -173,10 +230,54 @@ scene("instructions", () => {
       color: rgb(0, 0, 0),
       origin: "center",
     }),
-    onClick(() => {
-      go("home"); // Switch to the home scene when the Back button is clicked
-    }),
   ]);
+
+  // Speaker button
+  const speakerButton = add([
+    pos(50, height() - 50),
+    origin("center"),
+    layer("ui"),
+    area(),
+    sprite("sound"), // Initial sprite based on isMuted variable
+    scale(0.1),
+    color(255, 255, 255),
+    {
+      value: "Speaker",
+      isPlaying: true, // Added a property to track if music is playing
+    },
+    {
+      clickAction: function () {
+        if (this.isPlaying) {
+          this.use("mute"); // If music is playing, switch to mute sprite
+          this.isPlaying = false; // Toggle playing state
+          musicPlayer.pause(); // Pause the music
+        } else {
+          this.use("sound"); // If music is paused, switch to sound sprite
+          this.isPlaying = true; // Toggle playing state
+          musicPlayer.play(); // Start playing the music
+        }
+      },
+    },
+  ]);
+  // Handle mouse clicks on the buttons
+  mouseClick(() => {
+    const { x, y } = mousePos();
+    if (
+      x > backButton.pos.x - backButton.width / 2 &&
+      x < backButton.pos.x + backButton.width / 2 &&
+      y > backButton.pos.y - backButton.height / 2 &&
+      y < backButton.pos.y + backButton.height / 2
+    ) {
+      backButton.clickAction();
+    } else if (
+      x > speakerButton.pos.x - speakerButton.width / 2 &&
+      x < speakerButton.pos.x + speakerButton.width / 2 &&
+      y > speakerButton.pos.y - speakerButton.height / 2 &&
+      y < speakerButton.pos.y + speakerButton.height / 2
+    ) {
+      speakerButton.clickAction();
+    }
+  });
 });
 
 // Define the game scene
@@ -204,6 +305,43 @@ scene("game", () => {
       health: 6, // Set player health to 6 hits
     },
   ]);
+
+  // Speaker button
+  const speakerButton = add([
+    pos(50, height() - 50),
+    origin("center"),
+    layer("ui"),
+    area(),
+    sprite("sound"), // Initial sprite based on isMuted variable
+    scale(0.1),
+    color(255, 255, 255),
+    {
+      value: "Speaker",
+      isPlaying: true, // Added a property to track if music is playing
+    },
+    {
+      clickAction: function () {
+        if (this.isPlaying) {
+          this.use("mute"); // If music is playing, switch to mute sprite
+          this.isPlaying = false; // Toggle playing state
+          musicPlayer.pause(); // Pause the music
+        } else {
+          this.use("sound"); // If music is paused, switch to sound sprite
+          this.isPlaying = true; // Toggle playing state
+          musicPlayer.play(); // Start playing the music
+        }
+      },
+    },
+  ]);
+
+  // Function to play background music and set it to loop
+  const musicPlayer = play("game1-music", {
+    loop: true, // Set loop to true to play the music in a loop
+    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+  });
+
+  // Initially, music starts playing
+  musicPlayer.play();
 
   const healthBar = add([
     rect(200, 20), // Width: 200, Height: 20
@@ -251,6 +389,7 @@ scene("game", () => {
   });
 
   keyPress("escape", () => {
+    musicPlayer.pause();
     go("home");
   });
 
@@ -258,6 +397,7 @@ scene("game", () => {
 
   loadSprite("zombie_male", "public/sprites/zombie_male/Walk1.png");
   loadSprite("zombie_female", "public/sprites/zombie_female/Walk1.png");
+
 
   // Define a variable to keep track of the number of spawned enemies
   let numSpawnedEnemies = 0;
@@ -333,6 +473,19 @@ scene("game", () => {
         }
       }
     }
+
+    // Handle mouse clicks on the buttons
+    mouseClick(() => {
+      const { x, y } = mousePos();
+      if (
+        x > speakerButton.pos.x - speakerButton.width / 2 &&
+        x < speakerButton.pos.x + speakerButton.width / 2 &&
+        y > speakerButton.pos.y - speakerButton.height / 2 &&
+        y < speakerButton.pos.y + speakerButton.height / 2
+      ) {
+        speakerButton.clickAction();
+      }
+    });
 
   }
 
@@ -476,5 +629,13 @@ loadSprite(
     sliceY: 1,
   }
 );
+
+// Load the speaker sprite for the speaker button
+loadSprite("sound", "public/sprites/speaker/sound.png");
+loadSprite("mute", "public/sprites/speaker/mute.png");
+
+// Load the background music
+loadSound("home-music", "/public/sound/home.ogg");
+loadSound("game1-music", "/public/sound/game1.ogg");
 
 go("home");
