@@ -162,4 +162,84 @@ export default function loadLevelAssets() {
       sliceY: 1
     }
   );
+  loadSprite(
+    'arrow-right',
+    "public/sprites/objects_set/ArrowSign.png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
+  loadSprite(
+    'bush-1',
+    "public/sprites/objects_set/Bush (1).png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
+  loadSprite(
+    'bush-2',
+    "public/sprites/objects_set/Bush (2).png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
+  loadSprite(
+    'crate',
+    "public/sprites/objects_set/Crate.png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
+  loadSprite(
+    'dead-bush',
+    "public/sprites/objects_set/DeadBush.png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
+  loadSprite(
+    'sign',
+    "public/sprites/objects_set/Sign.png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
+  loadSprite(
+    'skeleton',
+    "public/sprites/objects_set/Skeleton.png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
+  loadSprite(
+    'tombstone-1',
+    "public/sprites/objects_set/TombStone (1).png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
+  loadSprite(
+    'tombstone-2',
+    "public/sprites/objects_set/TombStone (2).png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
+  loadSprite(
+    'tree',
+    "public/sprites/objects_set/Tree.png",
+    {
+      sliceX: 1,
+      sliceY: 1
+    }
+  );
 }
