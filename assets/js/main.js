@@ -9,9 +9,8 @@ kaboom({
   canvas: document.getElementById("game-canvas"),
 });
 
-
 // load tiles
-loadLevelAssets()
+loadLevelAssets();
 
 let spawnInterval;
 
@@ -298,21 +297,12 @@ scene("game", () => {
   add([sprite("background_cemetery"), layer("bg"), scale(0.53)]);
 
   // assign tiles to map layout
-  const tileMapping = generateMappings()
+  const tileMapping = generateMappings();
   // attach tiles to game
-  const map =  []
-  for (let layout of level1Layout){
-    map.push(addLevel(layout, tileMapping))
+  const map = [];
+  for (let layout of level1Layout) {
+    map.push(addLevel(layout, tileMapping));
   }
-  
-  const floor = add([
-    rect(width(), 10),
-    pos(0, (4 * height()) / 5),
-    color(rgb(18, 33, 35)),
-    area(),
-    solid(),
-    "ground",
-  ]);
 
   const player = add([
     sprite("idle1"),
@@ -480,7 +470,7 @@ scene("game", () => {
     // Randomly decide whether the enemy should jump
     if (!enemy.jumping && Math.random() < 0.02) {
       // Adjust the probability of jumping as needed
-      enemy.jumpForce = -10000; // Set a negative jump force to move upwards (higher jump)
+      enemy.jumpForce = -100; // Set a negative jump force to move upwards (higher jump)
       enemy.gravity = 8000; // Set a positive gravity to bring the enemy down quickly
       enemy.jumping = true; // Set a flag to indicate that the enemy is jumping
     }
@@ -499,7 +489,7 @@ scene("game", () => {
       }
     }
     const movementDirection = player.pos.sub(enemy.pos).unit();
-    enemy.move(movementDirection.scale(5000 * dt()));
+    enemy.move(movementDirection.scale(2000 * dt()));
     // Flip the enemy sprite based on player's position
     if (player.pos.x > enemy.pos.x) {
       // Player is on the right-hand side of the enemy
@@ -522,6 +512,9 @@ scene("game", () => {
         healthBar.color = rgb(255, 0, 0);
 
         // Update health bar
+        updateHealthBar();
+
+        player.health = 0; // Set the player's health to 0 to indicate death
         updateHealthBar();
 
         // Check if the player is out of health
@@ -661,7 +654,6 @@ scene("game", () => {
 
       bullet.destroy(); // Destroy the bullet after hitting an enemy
 
-
       // Check if the player has killed all enemies
       if (destroyedZombies >= 40) {
         musicPlayer.pause();
@@ -680,10 +672,13 @@ scene("game", () => {
 // Game over scene you lost
 scene("gameOver", ({ zombiesKilled }) => {
   add([
-    sprite("background_cemetery"), layer("bg"), scale(0.53),
+    sprite("background_cemetery"),
+    layer("bg"),
+    scale(0.53),
     text(`You were killed!\nZombies killed: ${zombiesKilled}`, 24),
     origin("center"),
-    pos(width() / 2, height() / 2)]);
+    pos(width() / 2, height() / 2),
+  ]);
 
   const restartButton = add([
     pos(width() / 2, height() / 2 + 60),
@@ -781,8 +776,13 @@ scene("congratulations", ({ zombiesKilled }) => {
   destroyedZombies = 0;
 
   add([
-    sprite("background_cemetery"), layer("bg"), scale(0.53),
-    text(`Congratulations!\nYou destroyed all zombies!\nZombies killed: ${zombiesKilled}`, 24),
+    sprite("background_cemetery"),
+    layer("bg"),
+    scale(0.53),
+    text(
+      `Congratulations!\nYou destroyed all zombies!\nZombies killed: ${zombiesKilled}`,
+      24
+    ),
     origin("center"),
     pos(width() / 2, height() / 2),
   ]);
@@ -910,7 +910,6 @@ loadSprite("window", "/public/background-images/window.jpg", {
   sliceY: 1,
 });
 
-
 loadSprite("idle1", "public/sprites/jack-o-lantern/Idle1.png");
 loadSprite(
   "background_cemetery",
@@ -942,4 +941,3 @@ loadSound("home-music", "/public/sound/home.ogg");
 loadSound("game1-music", "/public/sound/game1.ogg");
 
 go("home");
-
