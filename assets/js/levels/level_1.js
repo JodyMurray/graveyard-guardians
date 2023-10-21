@@ -23,6 +23,17 @@ const level1Layout = [
     "            I ",
     "     H        ",
     "       J    K ",
+  ],
+  [
+    "              ",
+    " L     U    QO",
+    "      MT      ",
+    "              ",
+    "              ",
+    "            RP",
+    "       RN     ",
+    " SMT          ",
+    "              ",
   ]
 ];
 
