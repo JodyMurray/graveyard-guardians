@@ -17,6 +17,7 @@ let spawnInterval;
 const SPEED = 120;
 const JUMP_FORCE = 200;
 let destroyedZombies = 0;
+let currentPotion = null;
 
 // Define the home page scene
 scene("home", () => {
@@ -317,16 +318,44 @@ scene("game", () => {
     },
   ]);
 
-  const potion = add([
-    sprite("potion"),
-    pos(130, 495),
-    scale(0.2),
-    origin("center"),
-    area(),
-    "potion",
-  ]);
+  function spawnPotion() {
+    if (currentPotion) {
+      destroy(currentPotion); // Destroy the current potion if it exists
+    }
+  
+    // Define an array of positions where potions can spawn
+    const spawnPositions = [
+      pos(130, 495),
+      pos(430, 175),
+      pos(130, 108),
+      pos(750, 365),
+      pos(750, 108),
+    ];
+  
+    // Choose a random position from the spawnPositions array
+    const randomPosition = spawnPositions[Math.floor(Math.random() * spawnPositions.length)];
+  
+    // Spawn a new potion at the selected position
+    currentPotion = add([
+      sprite("potion"),
+      randomPosition,
+      scale(0.2),
+      origin("center"),
+      area(),
+      "potion",
+    ]);
+  }
 
-  player.onCollide("potion", (health) => {
+  // Call spawnPotion initially to spawn the first potion
+  spawnPotion();
+
+  // Use loop to spawn a new potion every 30 seconds
+  loop(30, () => {
+    spawnPotion();
+  });
+
+  // Player collects the potion
+  player.onCollide("potion", () => {
     // Increase the player's health
     player.health += 1;
 
@@ -334,7 +363,7 @@ scene("game", () => {
     updateHealthBar();
 
     // Destroy the health item after the collision
-    destroy(potion);
+    destroy(currentPotion);
   });
 
 
