@@ -458,8 +458,10 @@ scene("game", () => {
   // assign tiles to map layout
   const tileMapping = generateMappings()
   // attach tiles to game
-  const gameLevel = addLevel(level1Layout, tileMapping)
-
+  const map =  []
+  for (let layout of level1Layout){
+    map.push(addLevel(layout, tileMapping))
+  }
 });
 
 // Load assets and start the home page scene
