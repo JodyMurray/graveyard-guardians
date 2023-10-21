@@ -146,5 +146,55 @@ export default function generateMappings(){
             solid(),
             "ground"
         ],
+        L: () => [
+            sprite('arrow-right'),
+            scale(0.5),
+            pos(0, 20)
+        ],
+        M: () => [
+            sprite('bush-1'),
+            scale(0.5),
+            pos(0, 25)
+        ],
+        N: () => [
+            sprite('bush-2'),
+            scale(0.5),
+            pos(0, 35)
+        ],
+        O: () => [
+            sprite('crate'),
+            scale(0.5),
+            pos(0, 12)
+        ],
+        P: () => [
+            sprite('dead-bush'),
+            scale(1),
+            pos(0, -10)
+        ],
+        Q: () => [
+            sprite('sign'),
+            scale(0.5),
+            pos(0, 19)
+        ],
+        R: () => [
+            sprite('tombstone-1'),
+            scale(0.8),
+            pos(25, 20)
+        ],
+        S: () => [
+            sprite('skeleton'),
+            scale(0.5),
+            pos(0, 40)
+        ],
+        T: () => [
+            sprite('tombstone-2'),
+            scale(0.7),
+            pos(0, 15)
+        ],
+        U: () => [
+            sprite('tree'),
+            scale(0.5),
+            pos(0,10)
+        ],
     }
 }
