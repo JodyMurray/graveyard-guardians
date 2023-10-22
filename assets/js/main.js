@@ -1,4 +1,5 @@
-import level1Layout from "./levels/level_1.js";
+import level1Layout from "./levels/level1/level_1.js";
+import level1Config from "./levels/level1/level1Config.js";
 import loadLevelAssets from "./levels/level_assets.js";
 import generateMappings from "./levels/generalMapping.js";
 
@@ -14,10 +15,53 @@ loadLevelAssets();
 
 let spawnInterval;
 
-const SPEED = 120;
-const JUMP_FORCE = 200;
 let destroyedZombies = 0;
 let currentPotion = null;
+
+let SPEED
+let JUMP_FORCE;
+let leftEnemyStartPosX;
+let leftEnemyStartPosY;
+let rightEnemyStartPosX;
+let rightEnemyStartPosY;
+let enemySpawnInterval;
+
+// general setting of the game level
+let level = 1;
+/**
+ * Game settings based on level
+ * @param {*} gravity - sets the gravity of the game
+ * @param {*} playerSpeed - sets the speed of the game based on player speed
+ * @param {*} levelJumpForce - sets the player jump force
+ * @param {*} leftEnemyStartX - enemy left spawn coordinate X
+ * @param {*} leftEnemyStartY - enemy left spawn coordinate Y
+ * @param {*} rightEnemyStartX - enemy right spawn coordinate X
+ * @param {*} rightEnemyStartY - enemy right spawn coordinate Y
+ */
+function levelSettings(
+  speed, levelJumpForce, leftEnemyStartX, leftEnemyStartY, rightEnemyStartX, rightEnemyStartY, lvlSpawnInterval){
+  SPEED = speed;
+  JUMP_FORCE = levelJumpForce;
+  leftEnemyStartPosX = leftEnemyStartX;
+  leftEnemyStartPosY = leftEnemyStartY;
+  rightEnemyStartPosX = rightEnemyStartX;
+  rightEnemyStartPosY = rightEnemyStartY;
+  enemySpawnInterval = lvlSpawnInterval;
+
+}
+// call levelSettings based on level
+switch(level){
+  case 1:
+    levelSettings(
+      level1Config.playerSpeed,
+      level1Config.levelJumpForce,
+      level1Config.leftEnemyStartPosX,
+      level1Config.leftEnemyStartPosY,
+      level1Config.rightEnemyStartPosX,
+      level1Config.rightEnemyStartPosY,
+      level1Config.levelSpawnInterval
+    )
+}
 
 // Define the home page scene
 scene("home", () => {
@@ -308,9 +352,9 @@ scene("game", () => {
   const player = add([
     sprite("idle1"),
     pos(width() / 2, height() / 2),
+    scale(0.12),
     origin("center"),
-    scale(0.1),
-    area(),
+    area({scale: 0.6, offset: vec2(0, 16)}),
     body({ isStatic: true }),
     {
       dir: vec2(1, 0),
@@ -617,15 +661,29 @@ scene("game", () => {
     const randomEnemySprite =
       enemySprites[Math.floor(Math.random() * enemySprites.length)];
 
+    let enemyAreaScale = randomEnemySprite == "zombie_female" ? 0.7 : 0.8;
     const enemy = add([
       sprite(randomEnemySprite),
       pos(x, y),
       origin("center"),
       scale(0.15),
       layer("bullet"),
-      area(),
+      area({scale: vec2(enemyAreaScale, 1)}),
+      body(),
       "enemy",
     ]);
+    
+    // check the altitude of the player vs enemy
+    // to make enemy walk horizontally if is grounded
+    enemy.onUpdate(() => {
+      if (player.pos.y > enemy.pos.y) {
+        if (player.pos.x > enemy.pos.x) {
+          enemy.move(SPEED / 6, 0)
+        } else {
+          enemy.move(-(SPEED / 6), 0)
+        }
+      }
+    })
 
     // Increment the number of spawned enemies
     numSpawnedEnemies++;
@@ -657,8 +715,8 @@ scene("game", () => {
 
   // Update function to spawn random enemies at random positions
   const spawnPoints = [
-    { x: 0, y: 440 },
-    { x: 930, y: 440 },
+    { x: leftEnemyStartPosX, y: leftEnemyStartPosY },
+    { x: rightEnemyStartPosX, y: rightEnemyStartPosY },
   ];
 
   const enemySprites = ["zombie_male", "zombie_female"];
@@ -667,7 +725,7 @@ scene("game", () => {
     const randomSpawnPoint =
       spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
     spawnRandomEnemy(randomSpawnPoint.x, randomSpawnPoint.y);
-  }, 2000); // Spawn a new enemy every 2 seconds (adjust the interval as needed)
+  }, enemySpawnInterval); // Spawn a new enemy every 2 seconds (adjust the interval as needed)
 
   function createBullet(player) {
     const bulletSpeed = 10000;
@@ -675,7 +733,7 @@ scene("game", () => {
 
     const bullet = add([
       sprite("red"),
-      pos(player.pos),
+      pos(player.pos.sub(0, -20)),
       origin("center"),
       area({ width: 8, height: 8 }),
       layer("bullet"),
