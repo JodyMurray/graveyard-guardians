@@ -152,7 +152,7 @@ scene("home", () => {
   // Function to play background music and set it to loop
   const musicPlayer = play("home-music", {
     loop: true, // Set loop to true to play the music in a loop
-    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+    volume: 0.04, // Adjust the volume as needed (0.0 to 1.0)
   });
 
   // Initially, music starts playing
@@ -223,7 +223,7 @@ scene("instructions", () => {
   // Function to play background music and set it to loop
   const musicPlayer = play("home-music", {
     loop: true, // Set loop to true to play the music in a loop
-    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+    volume: 0.04, // Adjust the volume as needed (0.0 to 1.0)
   });
 
   // Initially, music starts playing
@@ -466,7 +466,7 @@ scene("game", () => {
   // Function to play background music and set it to loop
   const musicPlayer = play("game1-music", {
     loop: true, // Set loop to true to play the music in a loop
-    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+    volume: 0.04, // Adjust the volume as needed (0.0 to 1.0)
   });
 
   // Initially, music starts playing
@@ -567,7 +567,7 @@ scene("game", () => {
 
   // Handle space bar key press to fire bullets
   keyPress("space", () => {
-    play("gunshot");
+    play("gunshot", {volume:0.05});
     const bullet = createBullet(player);
   });
 
@@ -617,7 +617,7 @@ scene("game", () => {
 
     function performAttack(enemy) {
       if (canAttack) {
-        play("player-hit");
+        play("player-hit",{volume:0.05});
         // Check if the enemy can attack (based on timer)
         canAttack = false; // Set canAttack to false to prevent rapid attacks
         setTimeout(() => {
@@ -633,7 +633,7 @@ scene("game", () => {
 
         // Check if the player is out of health
         if (player.health <= 0) {
-          play("player-death");
+          play("player-death", {volume:0.05});
           musicPlayer.pause();
           // Switch to game over scene with the number of zombies killed as a parameter
           go("gameOver", { zombiesKilled: destroyedZombies });
@@ -703,7 +703,7 @@ scene("game", () => {
 
       // Check if the player is out of health
       if (player.health <= 0) {
-        play("player-death");
+        play("player-death", {volume:0.04});
         musicPlayer.pause();
         // Switch to game over scene with the number of zombies killed as a parameter
         go("gameOver", { zombiesKilled: destroyedZombies });
@@ -767,13 +767,13 @@ scene("game", () => {
     // Handle collisions with enemies
     bullet.collides("enemy", (enemy) => {
       // Decrease enemy health
-      play("zombie-hit");
+      play("zombie-hit", {volume:0.05});
       enemy.health = enemy.health || enemyHealth;
       enemy.health--; // Decrease enemy health by 1 each time they are hit
 
       // Check if the enemy has no health left
       if (enemy.health <= 0) {
-        play("enemy-death");
+        play("enemy-death", {volume:0.05});
         // If the enemy is out of health, destroy it
         enemy.destroy();
         destroyedZombies++;
@@ -853,7 +853,7 @@ scene("gameOver", ({ zombiesKilled }) => {
   // Function to play background music and set it to loop
   const musicPlayer = play("home-music", {
     loop: true, // Set loop to true to play the music in a loop
-    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+    volume: 0.04, // Adjust the volume as needed (0.0 to 1.0)
   });
 
   // Initially, music starts playing
@@ -957,7 +957,7 @@ loadSound("home-music", "/public/sound/home.ogg");
 loadSound("game1-music", "/public/sound/game1.ogg");
 
 // Load the gunshot sound
-loadSound("gunshot", "/public/sound/gunshot.mp3");
+loadSound("gunshot", "/public/sound/gunshot.mp3", 0);
 // Load the hit sound
 loadSound("zombie-hit", "/public/sound/zombie-hit.mp3");
 loadSound("player-hit", "/public/sound/player-hit.mp3");
