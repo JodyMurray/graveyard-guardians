@@ -352,9 +352,9 @@ scene("game", () => {
   const player = add([
     sprite("idle1"),
     pos(width() / 2, height() / 2),
-    scale(0.1),
-    origin("top"),
-    area(),
+    scale(0.12),
+    origin("center"),
+    area({scale: 0.6, offset: vec2(0, 16)}),
     body({ isStatic: true }),
     {
       dir: vec2(1, 0),
@@ -678,9 +678,9 @@ scene("game", () => {
     enemy.onUpdate(() => {
       if (player.pos.y > enemy.pos.y) {
         if (player.pos.x > enemy.pos.x) {
-          enemy.move(SPEED, 0)
+          enemy.move(SPEED / 6, 0)
         } else {
-          enemy.move(-SPEED, 0)
+          enemy.move(-(SPEED / 6), 0)
         }
       }
     })
@@ -733,7 +733,7 @@ scene("game", () => {
 
     const bullet = add([
       sprite("red"),
-      pos(player.pos.sub(0, -50)),
+      pos(player.pos.sub(0, -20)),
       origin("center"),
       area({ width: 8, height: 8 }),
       layer("bullet"),
