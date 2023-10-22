@@ -6,7 +6,7 @@ const level1Layout = [
     "              ",
     "              ",
     "223        EFF",
-    "99D   EFFG    ",
+    "99D   EFG     ",
     "              ",
     "              ",
     "    123    122",
