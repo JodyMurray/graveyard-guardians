@@ -353,6 +353,7 @@ scene("game", () => {
     sprite("idle1"),
     pos(width() / 2, height() / 2),
     scale(0.1),
+    origin("top"),
     area(),
     body({ isStatic: true }),
     {
@@ -732,7 +733,7 @@ scene("game", () => {
 
     const bullet = add([
       sprite("red"),
-      pos(player.pos),
+      pos(player.pos.sub(0, -50)),
       origin("center"),
       area({ width: 8, height: 8 }),
       layer("bullet"),
