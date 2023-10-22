@@ -50,7 +50,6 @@ The purpose of the game is to provide players with a fun and entertaining experi
     | 5 | User | Feel progression in difficulty | Stay focused |
 
 - ### Structure
-<br>
 ![structuretree](./assets/images/structure.png)
 
 ## Design
