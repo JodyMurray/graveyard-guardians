@@ -8,6 +8,6 @@ const level1Config = {
     rightEnemyStartPosY: 50,
     enemies: 20,
     levelSpawnInterval: 2000
-  }
+  };
 
-  export default level1Config
+  export default level1Config;
