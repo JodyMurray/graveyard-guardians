@@ -18,7 +18,7 @@ let spawnInterval;
 let destroyedZombies = 0;
 let currentPotion = null;
 
-let SPEED
+let SPEED;
 let JUMP_FORCE;
 let leftEnemyStartPosX;
 let leftEnemyStartPosY;
@@ -60,7 +60,7 @@ switch(level){
       level1Config.rightEnemyStartPosX,
       level1Config.rightEnemyStartPosY,
       level1Config.levelSpawnInterval
-    )
+    );
 }
 
 // Define the home page scene
@@ -555,10 +555,10 @@ scene("game", () => {
     go("home");
   });
 
-  loadSprite("red", "public/sprites/bullet/red.png");
+  loadSprite("red", "../../public/sprites/bullet/red.png");
 
-  loadSprite("zombie_male", "public/sprites/zombie_male/Walk1.png");
-  loadSprite("zombie_female", "public/sprites/zombie_female/Walk1.png");
+  loadSprite("zombie_male", "../../public/sprites/zombie_male/Walk1.png");
+  loadSprite("zombie_female", "../../public/sprites/zombie_female/Walk1.png");
 
   // Define a variable to keep track of the number of spawned enemies
   let numSpawnedEnemies = 0;
@@ -586,8 +586,8 @@ scene("game", () => {
     // Randomly decide whether the enemy should jump
     if (!enemy.jumping && Math.random() < 0.02) {
       // Adjust the probability of jumping as needed
-      enemy.jumpForce = -100; // Set a negative jump force to move upwards (higher jump)
-      enemy.gravity = 8000; // Set a positive gravity to bring the enemy down quickly
+      enemy.jumpForce = JUMP_FORCE / 2; // Set a negative jump force to move upwards (higher jump)
+      enemy.gravity = 800; // Set a positive gravity to bring the enemy down quickly
       enemy.jumping = true; // Set a flag to indicate that the enemy is jumping
     }
 
@@ -678,16 +678,15 @@ scene("game", () => {
     enemy.onUpdate(() => {
       if (player.pos.y > enemy.pos.y) {
         if (player.pos.x > enemy.pos.x) {
-          enemy.move(SPEED / 6, 0)
+          enemy.move(SPEED / 6, 0);
         } else {
-          enemy.move(-(SPEED / 6), 0)
+          enemy.move(-(SPEED / 6), 0);
         }
       }
-    })
+    });
 
     // Increment the number of spawned enemies
     numSpawnedEnemies++;
-    console.log(numSpawnedEnemies)
 
     // Handle enemy movement towards the player
     enemy.action(() => {
@@ -892,25 +891,25 @@ scene("gameOver", ({ zombiesKilled }) => {
 });
 
 // Load assets and start the home page scene
-loadSprite("background-home", "/public/background-images/home_page.png", {
+loadSprite("background-home", "../../public/background-images/home_page.png", {
   sliceX: 1,
   sliceY: 1,
 });
 
 const spriteNames = ["idle1", "walk1", "walk2", "walk3", "walk5"];
 const spritePaths = [
-  "public/sprites/jack-o-lantern/Idle1.png",
-  "public/sprites/jack-o-lantern/walk1.png",
-  "public/sprites/jack-o-lantern/walk2.png",
-  "public/sprites/jack-o-lantern/walk3.png",
-  "public/sprites/jack-o-lantern/walk4.png",
-  "public/sprites/jack-o-lantern/walk5.png",
+  "../../public/sprites/jack-o-lantern/Idle1.png",
+  "../../public/sprites/jack-o-lantern/walk1.png",
+  "../../public/sprites/jack-o-lantern/walk2.png",
+  "../../public/sprites/jack-o-lantern/walk3.png",
+  "../../public/sprites/jack-o-lantern/walk4.png",
+  "../../public/sprites/jack-o-lantern/walk5.png",
 ];
 const jumpNames = ["jump1", "jump2", "jump3"];
 const jumpPaths = [
-  "public/sprites/jack-o-lantern/jump1.png",
-  "public/sprites/jack-o-lantern/jump2.png",
-  "public/sprites/jack-o-lantern/jump3.png",
+  "../../public/sprites/jack-o-lantern/jump1.png",
+  "../../public/sprites/jack-o-lantern/jump2.png",
+  "../../public/sprites/jack-o-lantern/jump3.png",
 ];
 jumpPaths.forEach((path, index) => {
   loadSprite(jumpNames[index], path);
@@ -919,24 +918,24 @@ spriteNames.forEach((name, index) => {
   loadSprite(name, spritePaths[index]);
 });
 
-loadSprite("window", "/public/background-images/window.jpg", {
+loadSprite("window", "../../public/background-images/window.jpg", {
   sliceX: 1,
   sliceY: 1,
 });
 
-loadSprite("idle1", "public/sprites/jack-o-lantern/Idle1.png");
+loadSprite("idle1", "../../public/sprites/jack-o-lantern/Idle1.png");
 loadSprite(
   "background_cemetery",
-  "public/sprites/objects_set/background_cemetery.png",
+  "../../public/sprites/objects_set/background_cemetery.png",
   {
     sliceX: 1,
     sliceY: 1,
   }
 );
 
-loadSprite("potion", "public/sprites/potion.png");
+loadSprite("potion", "../../public/sprites/potion.png");
 
-loadSprite("player", "public/sprites/jack-o-lantern/Idle1.png", {
+loadSprite("player", "../../public/sprites/jack-o-lantern/Idle1.png", {
   sliceX: 0,
   sliceY: 3,
   anims: {
@@ -949,20 +948,20 @@ loadSprite("player", "public/sprites/jack-o-lantern/Idle1.png", {
 });
 
 // Load the speaker sprite for the speaker button
-loadSprite("sound", "public/sprites/speaker/sound.png");
-loadSprite("mute", "public/sprites/speaker/mute.png");
+loadSprite("sound", "../../public/sprites/speaker/sound.png");
+loadSprite("mute", "../../public/sprites/speaker/mute.png");
 
 // Load the background music
-loadSound("home-music", "/public/sound/home.ogg");
-loadSound("game1-music", "/public/sound/game1.ogg");
+loadSound("home-music", "../../public/sound/home.ogg");
+loadSound("game1-music", "../../public/sound/game1.ogg");
 
 // Load the gunshot sound
-loadSound("gunshot", "/public/sound/gunshot.mp3", 0);
+loadSound("gunshot", "../../public/sound/gunshot.mp3", 0);
 // Load the hit sound
-loadSound("zombie-hit", "/public/sound/zombie-hit.mp3");
-loadSound("player-hit", "/public/sound/player-hit.mp3");
+loadSound("zombie-hit", "../../public/sound/zombie-hit.mp3");
+loadSound("player-hit", "../../public/sound/player-hit.mp3");
 // Load the death sound
-loadSound("enemy-death", "/public/sound/death.mp3");
-loadSound("player-death", "/public/sound/player-death.mp3");
+loadSound("enemy-death", "../../public/sound/death.mp3");
+loadSound("player-death", "../../public/sound/player-death.mp3");
 
 go("home");
