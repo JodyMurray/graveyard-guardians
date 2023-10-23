@@ -18,7 +18,7 @@ let spawnInterval;
 let destroyedZombies = 0;
 let currentPotion = null;
 
-let SPEED
+let SPEED;
 let JUMP_FORCE;
 let leftEnemyStartPosX;
 let leftEnemyStartPosY;
@@ -60,7 +60,7 @@ switch(level){
       level1Config.rightEnemyStartPosX,
       level1Config.rightEnemyStartPosY,
       level1Config.levelSpawnInterval
-    )
+    );
 }
 
 // Define the home page scene
@@ -152,7 +152,7 @@ scene("home", () => {
   // Function to play background music and set it to loop
   const musicPlayer = play("home-music", {
     loop: true, // Set loop to true to play the music in a loop
-    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+    volume: 0.04, // Adjust the volume as needed (0.0 to 1.0)
   });
 
   // Initially, music starts playing
@@ -223,7 +223,7 @@ scene("instructions", () => {
   // Function to play background music and set it to loop
   const musicPlayer = play("home-music", {
     loop: true, // Set loop to true to play the music in a loop
-    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+    volume: 0.04, // Adjust the volume as needed (0.0 to 1.0)
   });
 
   // Initially, music starts playing
@@ -466,7 +466,7 @@ scene("game", () => {
   // Function to play background music and set it to loop
   const musicPlayer = play("game1-music", {
     loop: true, // Set loop to true to play the music in a loop
-    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+    volume: 0.04, // Adjust the volume as needed (0.0 to 1.0)
   });
 
   // Initially, music starts playing
@@ -567,7 +567,7 @@ scene("game", () => {
 
   // Handle space bar key press to fire bullets
   keyPress("space", () => {
-    play("gunshot");
+    play("gunshot", {volume:0.05});
     const bullet = createBullet(player);
   });
 
@@ -586,8 +586,8 @@ scene("game", () => {
     // Randomly decide whether the enemy should jump
     if (!enemy.jumping && Math.random() < 0.02) {
       // Adjust the probability of jumping as needed
-      enemy.jumpForce = -100; // Set a negative jump force to move upwards (higher jump)
-      enemy.gravity = 8000; // Set a positive gravity to bring the enemy down quickly
+      enemy.jumpForce = JUMP_FORCE / 2; // Set a negative jump force to move upwards (higher jump)
+      enemy.gravity = 800; // Set a positive gravity to bring the enemy down quickly
       enemy.jumping = true; // Set a flag to indicate that the enemy is jumping
     }
 
@@ -617,7 +617,7 @@ scene("game", () => {
 
     function performAttack(enemy) {
       if (canAttack) {
-        play("player-hit");
+        play("player-hit",{volume:0.05});
         // Check if the enemy can attack (based on timer)
         canAttack = false; // Set canAttack to false to prevent rapid attacks
         setTimeout(() => {
@@ -633,7 +633,7 @@ scene("game", () => {
 
         // Check if the player is out of health
         if (player.health <= 0) {
-          play("player-death");
+          play("player-death", {volume:0.05});
           musicPlayer.pause();
           // Switch to game over scene with the number of zombies killed as a parameter
           go("gameOver", { zombiesKilled: destroyedZombies });
@@ -678,16 +678,15 @@ scene("game", () => {
     enemy.onUpdate(() => {
       if (player.pos.y > enemy.pos.y) {
         if (player.pos.x > enemy.pos.x) {
-          enemy.move(SPEED / 6, 0)
+          enemy.move(SPEED / 6, 0);
         } else {
-          enemy.move(-(SPEED / 6), 0)
+          enemy.move(-(SPEED / 6), 0);
         }
       }
-    })
+    });
 
     // Increment the number of spawned enemies
     numSpawnedEnemies++;
-    console.log(numSpawnedEnemies)
 
     // Handle enemy movement towards the player
     enemy.action(() => {
@@ -703,7 +702,7 @@ scene("game", () => {
 
       // Check if the player is out of health
       if (player.health <= 0) {
-        play("player-death");
+        play("player-death", {volume:0.04});
         musicPlayer.pause();
         // Switch to game over scene with the number of zombies killed as a parameter
         go("gameOver", { zombiesKilled: destroyedZombies });
@@ -767,13 +766,13 @@ scene("game", () => {
     // Handle collisions with enemies
     bullet.collides("enemy", (enemy) => {
       // Decrease enemy health
-      play("zombie-hit");
+      play("zombie-hit", {volume:0.05});
       enemy.health = enemy.health || enemyHealth;
       enemy.health--; // Decrease enemy health by 1 each time they are hit
 
       // Check if the enemy has no health left
       if (enemy.health <= 0) {
-        play("enemy-death");
+        play("enemy-death", {volume:0.05});
         // If the enemy is out of health, destroy it
         enemy.destroy();
         destroyedZombies++;
@@ -853,7 +852,7 @@ scene("gameOver", ({ zombiesKilled }) => {
   // Function to play background music and set it to loop
   const musicPlayer = play("home-music", {
     loop: true, // Set loop to true to play the music in a loop
-    volume: 0.5, // Adjust the volume as needed (0.0 to 1.0)
+    volume: 0.04, // Adjust the volume as needed (0.0 to 1.0)
   });
 
   // Initially, music starts playing
@@ -892,7 +891,7 @@ scene("gameOver", ({ zombiesKilled }) => {
 });
 
 // Load assets and start the home page scene
-loadSprite("background-home", "/public/background-images/home_page.png", {
+loadSprite("background-home", "public/background-images/home_page.png", {
   sliceX: 1,
   sliceY: 1,
 });
@@ -919,7 +918,7 @@ spriteNames.forEach((name, index) => {
   loadSprite(name, spritePaths[index]);
 });
 
-loadSprite("window", "/public/background-images/window.jpg", {
+loadSprite("window", "public/background-images/window.jpg", {
   sliceX: 1,
   sliceY: 1,
 });
@@ -953,16 +952,16 @@ loadSprite("sound", "public/sprites/speaker/sound.png");
 loadSprite("mute", "public/sprites/speaker/mute.png");
 
 // Load the background music
-loadSound("home-music", "/public/sound/home.ogg");
-loadSound("game1-music", "/public/sound/game1.ogg");
+loadSound("home-music", "public/sound/home.ogg");
+loadSound("game1-music", "public/sound/game1.ogg");
 
 // Load the gunshot sound
-loadSound("gunshot", "/public/sound/gunshot.mp3");
+loadSound("gunshot", "public/sound/gunshot.mp3", 0);
 // Load the hit sound
-loadSound("zombie-hit", "/public/sound/zombie-hit.mp3");
-loadSound("player-hit", "/public/sound/player-hit.mp3");
+loadSound("zombie-hit", "public/sound/zombie-hit.mp3");
+loadSound("player-hit", "public/sound/player-hit.mp3");
 // Load the death sound
-loadSound("enemy-death", "/public/sound/death.mp3");
-loadSound("player-death", "/public/sound/player-death.mp3");
+loadSound("enemy-death", "public/sound/death.mp3");
+loadSound("player-death", "public/sound/player-death.mp3");
 
 go("home");

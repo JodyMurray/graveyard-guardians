@@ -196,5 +196,5 @@ export default function generateMappings(){
             scale(0.5),
             pos(0,10)
         ],
-    }
+    };
 }

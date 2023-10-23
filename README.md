@@ -3,6 +3,7 @@
 ![Graveyard Guardians Home screen banner](./assets/images/home_screen_banner.png)
 
 ## Table of contents
+-   Live game can be found here [Graveyard Guardians](https://jodymurray.github.io/graveyard-guardians/)
 * [Purpose](#purpose)
 * [User Experience (UX)](#user-experience-ux)
     * [User Stories](#user-stories)
@@ -26,17 +27,11 @@
     * [Run the app](#run-the-app)
 * [Credits](#source--credits)
 
-
-
 ***
 
 ## Purpose
 The purpose of the game is to provide players with a fun and entertaining experience. It's a way for players to immerse themselves in the Halloween spirit and enjoy the excitement of action-packed gameplay set in a spooky and supernatural environment.
-
-## wireframes
-
-
-                 
+          
 ## User Experience (UX)
 -   ### User stories
     As a **(role)** I can **(capability)**, so that **(received benefit)**
@@ -50,27 +45,55 @@ The purpose of the game is to provide players with a fun and entertaining experi
     | 5 | User | Feel progression in difficulty | Stay focused |
 
 - ### Structure
-![structuretree](./assets/images/structure.png)
+    -   Sound button will be displayed on the screen at all times
+    -   Home page will have Start button and Instruction button
+    -   Instruction page will display How to play and a Back button to return to home page
+    -   Life bar will be displayed in the top left corner while playing
+    -   Zombies will spawn from left and right of the level
+    -   Zombies will attack the player and hit it from close distance
+    -   The player will be able to shoot zombies
 
 ## Design
 
 -   ### Typography
+    -   Font-family: 'Oswald' used as main font with fallback sans-serif;
 
 -   ### Wireframes
-    ![wireframe](./assets/images/wireframe.png)
+    ![home-page](assets/images/wireframes/Slide1.PNG)
+    ![instructions](assets/images/wireframes/Slide2.PNG)
+    ![level1](assets/images/wireframes/Slide3.PNG)
+    ![game-diagram](assets/images/wireframe.png)
 
 -   ### Limitations
+    -   Zombies can't jump
+    -   The game has only one level
+    -   Player can jump off screen
 
 ## Features
 -   ### Existing Features
-
-    ![Instructions](./assets/images/howplay.png)
-    <br>
-    ![firstlook](./assets/images/startpage.png)
-    <br>
-    ![NextRoundlook](./assets/images/nextground.png)
-    <br>
-
+    -   Instructions button - Sends player to instruction page<br>
+        ![instruction-button](assets/images/features/instructions-button.png)
+        <br>
+    -   Instructions page - Tells player how to play the game<br>
+        Satisfies user story - Easily access the instructions | Learn how to play |<br>
+        ![Instructions](assets/images/howplay.png)
+        <br>
+    -   Start button - Starts the game<br>
+        ![start-button](assets/images/features/start-button.png)
+        <br>
+    -   Level 1 - Play area map<br>
+        ![level1](assets/images/level1.png)
+        <br>
+    -   Sound toggle - Turn sound on/off<br>
+        Satisfies user story - Toggle music / sound | Create my own comfort |<br>
+        ![sound-button](assets/images/features/sound-button.png)
+        <br>
+    -   Life bar - Shows to player the how much life has left<br>
+        ![life-bar](assets/images/features/life-bar.png)
+        <br>
+    -   Next round page - Informs the player next round is comming
+        ![NextRoundlook](assets/images/nextground.png)
+        <br>
 
 ## Technologies
 
@@ -81,8 +104,22 @@ The purpose of the game is to provide players with a fun and entertaining experi
 
 ## Testing
 -   ### Test Strategy
+    -   Manual testing
+    -   Code validation
 
 -   ### Test Results
+    -   Css was passed  [jigsaw.w3.org](https://jigsaw.w3.org/css-validator/) test with no errors<br>
+    -   HTML was passed  [validator.w3.org](https://validator.w3.org/) test with no errors
+    -   JS files passed [jshint.com](https://jshint.com/) tests with no errors
+
+        | No | Test | Description | Pass / Fail | Fix | Pass / Fail |
+        |----|------|-------------|-------------|-----|-------------|
+        | 1 | See the overall theme of the game from the welcome page | Check the homepage background image is loaded | Pass | - | - | 
+        | 2 | Easily access the instructions | Add button on the home page | Pass | - | - |
+        | 3 | Toggle music / sound | Create a button on the screen to toggle sound on/off | Pass | - | - |
+        | 4 | See game details | Life bar in the top left corner of the screen, Enemy killed after player die | Pass | - | - |
+        | 5 | Feel progression in difficulty | Harder levels not developed yet | Fail | Future release | - |
+
 
 ## Deployment
 -   ### Project Creation
@@ -128,6 +165,12 @@ The purpose of the game is to provide players with a fun and entertaining experi
 
 
 -   ### Remote Deployment
+    -   This game is deployed on Github Pages.
+    1.  Navigate to Github repository
+    2.  Go to `Settings` tab
+    3.  Navigate to `Pages` tab
+    4.  Select the branch `main` to deploy from
+    5.  Click `Save`
 
 -   ### Run the app
     To run this app on your local machine, after the repository was cloned, open a Live server starting with index.html page
