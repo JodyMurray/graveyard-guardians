@@ -891,7 +891,7 @@ scene("gameOver", ({ zombiesKilled }) => {
 });
 
 // Load assets and start the home page scene
-loadSprite("background-home", "../../public/background-images/home_page.png", {
+loadSprite("background-home", "home_page.png", {
   sliceX: 1,
   sliceY: 1,
 });
